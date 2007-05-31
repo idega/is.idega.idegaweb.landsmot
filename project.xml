@@ -6,7 +6,7 @@
   <artifactId>is.idega.idegaweb.landsmot</artifactId>
   <currentVersion>3.1.0</currentVersion>
   <inceptionYear>2007</inceptionYear>
-  <shortDescription>Articles</shortDescription>
+  <shortDescription>Landsmot</shortDescription>
   <description>idegaWeb landsmot is a component for registering to Landsmot</description>
   <versions>
   </versions>
