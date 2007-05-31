@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns:j="jelly:core">
+  <extend>${base.project.dir}/block-dependencies.xml</extend>
+  <name>idegaWeb Landsmot</name>
+  <artifactId>is.idega.idegaweb.landsmot</artifactId>
+  <currentVersion>3.1.0</currentVersion>
+  <inceptionYear>2007</inceptionYear>
+  <shortDescription>Articles</shortDescription>
+  <description>idegaWeb landsmot is a component for registering to Landsmot</description>
+  <versions>
+  </versions>
+  <developers>
+    <developer>
+      <id>gimmi</id>
+      <name>Grimur Jonsson</name>
+      <email>gimmi@idega.is</email>
+      <organization>idega software</organization>
+      <roles/>
+    </developer>
+    <developer>
+      <id>sigtryggur</id>
+      <name>Sigtryggur Simonarson</name>
+      <email>sigtryggur@idega.is</email>
+      <organization/>
+      <roles/>
+    </developer>
+  </developers>
+  <dependencies>
+   <dependency>
+      <groupId>bundles</groupId>
+      <artifactId>com.idega.block.creditcard</artifactId>
+      <version>3.1.11</version>
+      <type>jar</type>
+      <url>http://www.idega.com/</url>
+      <properties>
+        <eclipse.dependency>true</eclipse.dependency>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>bundles</groupId>
+      <artifactId>com.idega.block.trade</artifactId>
+      <version>3.1.15</version>
+      <type>jar</type>
+      <url>http://www.idega.com/</url>
+      <properties>
+        <eclipse.dependency>true</eclipse.dependency>
+      </properties>
+    </dependency>
+  </dependencies>
+</project>
