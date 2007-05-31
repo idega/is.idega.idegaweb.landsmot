@@ -29,6 +29,16 @@
   <dependencies>
    <dependency>
       <groupId>bundles</groupId>
+      <artifactId>com.idega.core</artifactId>
+      <version>3.1.41</version>
+      <type>jar</type>
+      <url>http://www.idega.com/</url>
+      <properties>
+        <eclipse.dependency>true</eclipse.dependency>
+      </properties>
+    </dependency>
+   <dependency>
+      <groupId>bundles</groupId>
       <artifactId>com.idega.block.creditcard</artifactId>
       <version>3.1.11</version>
       <type>jar</type>
