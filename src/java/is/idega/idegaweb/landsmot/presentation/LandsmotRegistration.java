@@ -1,9 +1,14 @@
 package is.idega.idegaweb.landsmot.presentation;
 
 import is.idega.idegaweb.landsmot.business.LandsmotBusiness;
+import is.idega.idegaweb.landsmot.business.LandsmotEventBusiness;
 import is.idega.idegaweb.landsmot.business.Runner;
+import is.idega.idegaweb.landsmot.data.LandsmotEvent;
 
 import java.rmi.RemoteException;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -84,7 +89,7 @@ public class LandsmotRegistration extends Block {
 	private static final String PARAMETER_HOME_PHONE = "prm_home_phone";
 	private static final String PARAMETER_MOBILE_PHONE = "prm_mobile_phone";
 	private static final String PARAMETER_AGREE = "prm_agree";
-	
+	private static final String PARAMETER_EVENT = "prm_event";
 	private static final String PARAMETER_NAME_ON_CARD = "prm_name_on_card";
 	private static final String PARAMETER_CARD_NUMBER = "prm_card_number";
 	private static final String PARAMETER_EXPIRES_MONTH = "prm_expires_month";
@@ -109,6 +114,9 @@ public class LandsmotRegistration extends Block {
 
 
 	public void main(IWContext iwc) throws Exception {
+		
+		iwb =  getBundle(iwc);
+		iwrb = iwb.getResourceBundle(iwc);
 		
 		switch (parseAction(iwc)) {
 			case ACTION_STEP_ONE:
@@ -202,7 +210,11 @@ public class LandsmotRegistration extends Block {
 		table.add(choiceTable, 1, row++);
 		int iRow = 1;
 
-		SelectionBox eventSelect = new SelectionBox();
+		SelectionBox eventSelect = new SelectionBox(PARAMETER_EVENT);
+		Collection events = getEventBusiness(iwc).getAllSingleEvents();
+		if (events != null) {
+			eventSelect.addMenuElements(events);
+		}
 		Text redStar = getHeader("*");
 		redStar.setFontColor("#ff0000");
 
@@ -502,9 +514,8 @@ public class LandsmotRegistration extends Block {
 		Map runners = (Map) iwc.getSessionAttribute(SESSION_ATTRIBUTE_RUNNER_MAP);
 		Table runnerTable = new Table(3, runners.size() + 1);
 		runnerTable.setWidth(Table.HUNDRED_PERCENT);
-		runnerTable.add(getHeader(localize("run_reg.runner_name", "Runner name")), 1, 1);
-		runnerTable.add(getHeader(localize("run_reg.run", "Run")), 2, 1);
-		runnerTable.add(getHeader(localize("run_reg.distance", "Distance")), 3, 1);
+		runnerTable.add(getHeader(localize("run_reg.name", "Name")), 1, 1);
+		runnerTable.add(getHeader(localize("run_reg.event", "Event")), 2, 1);
 		table.add(runnerTable, 1, row++);
 		int runRow = 2;
 		
@@ -517,6 +528,12 @@ public class LandsmotRegistration extends Block {
 			else {
 				runnerTable.add(getText(runner.getName()), 1, runRow);
 			}
+			Collection evs = runner.getEvents();
+			Iterator eter = evs.iterator();
+			while (eter.hasNext()) {
+				LandsmotEvent ev =  (LandsmotEvent) eter.next();
+				runnerTable.add(ev.getName(), 2, runRow++);
+			}
 		}
 		
 		//if (runner.getRun() != null) {
@@ -524,7 +541,7 @@ public class LandsmotRegistration extends Block {
 		//	runnerTable.add(getText(localize(runner.getDistance().getName(), runner.getDistance().getName())), 3, runRow++);
 		//}
 		//else {
-			removeRunner(iwc, runner.getPersonalID());
+//			removeRunner(iwc, runner.getPersonalID());
 		//}
 		
 		SubmitButton previous = (SubmitButton) getButton(new SubmitButton(localize("previous", "Previous")));
@@ -557,6 +574,8 @@ public class LandsmotRegistration extends Block {
 		table.setWidth(Table.HUNDRED_PERCENT);
 		form.add(table);
 		int row = 1;
+		DecimalFormatSymbols symbs = new DecimalFormatSymbols(iwc.getLocale());
+		NumberFormat nf = new DecimalFormat("#,###", symbs);
 
 		table.add(getPhasesTable(6, 6, "run_reg.payment_info", "Payment info"), 1, row++);
 		table.setHeight(row++, 12);
@@ -568,10 +587,9 @@ public class LandsmotRegistration extends Block {
 		Table runnerTable = new Table();
 		runnerTable.setWidth(Table.HUNDRED_PERCENT);
 		runnerTable.setCellspacing(0);
-		runnerTable.add(getHeader(localize("run_reg.runner_name", "Runner name")), 1, 1);
-		runnerTable.add(getHeader(localize("run_reg.run", "Run")), 2, 1);
-		runnerTable.add(getHeader(localize("run_reg.distance", "Distance")), 3, 1);
-		runnerTable.add(getHeader(localize("run_reg.price", "Price")), 4, 1);
+		runnerTable.add(getHeader(localize("run_reg.name", "Name")), 1, 1);
+		runnerTable.add(getHeader(localize("run_reg.event", "Event")), 2, 1);
+		runnerTable.add(getHeader(localize("run_reg.price", "Price")), 3, 1);
 		table.add(runnerTable, 1, row++);
 		table.setHeight(row++, 18);
 		int runRow = 2;
@@ -586,15 +604,20 @@ public class LandsmotRegistration extends Block {
 			else {
 				runnerTable.add(getText(runner.getName()), 1, runRow);
 			}
-			//runnerTable.add(getText(localize(runner.getRun().getName(), runner.getRun().getName())), 2, runRow);
-			//runnerTable.add(getText(localize(runner.getDistance().getName(), runner.getDistance().getName())), 3, runRow);
-			float runPrice = 0;//getRunBusiness(iwc).getPriceForRunner(runner, iwc.getCurrentLocale(), this.chipDiscount, 0);
-			totalAmount += runPrice;
-			runnerTable.add(getText(String.valueOf(runPrice)), 4, runRow++);
+			
+			Collection events = runner.getEvents();
+			Iterator eter = events.iterator();
+			while (eter.hasNext()) {
+				LandsmotEvent event = (LandsmotEvent) eter.next();
+				runnerTable.add(getText(event.getName()), 2, runRow);
+				float price = event.getPrice();
+				totalAmount += price;
+				runnerTable.add(getText(nf.format(price)), 3, runRow++);
+			}
+			
 		
 
 			
-			runner.setAmount(runPrice);
 			addRunner(iwc, runner.getPersonalID(), runner);
 			
 		}
@@ -610,8 +633,8 @@ public class LandsmotRegistration extends Block {
 		
 		runnerTable.setHeight(runRow++, 12);
 		runnerTable.add(getHeader(localize("run_reg.total_amount", "Total amount")), 1, runRow);
-		runnerTable.add(getHeader(String.valueOf(totalAmount)), 4, runRow);
-		runnerTable.setColumnAlignment(4, Table.HORIZONTAL_ALIGN_RIGHT);
+		runnerTable.add(getHeader(nf.format(totalAmount)), 3, runRow);
+		runnerTable.setColumnAlignment(3, Table.HORIZONTAL_ALIGN_RIGHT);
 
 		Table creditCardTable = new Table();
 		creditCardTable.setWidth(Table.HUNDRED_PERCENT);
@@ -930,6 +953,14 @@ public class LandsmotRegistration extends Block {
 			if (iwc.isParameterSet(PARAMETER_AGREE)) {
 				runner.setAgree(true);
 			}
+			if (iwc.isParameterSet(PARAMETER_EVENT)) {
+				String[] events = iwc.getParameterValues(PARAMETER_EVENT);
+				for (int i = 0; i < events.length; i++) {
+					LandsmotEvent ev = getEventBusiness(iwc).getEvent(new Integer(events[i]));
+					System.out.println("[LandsmotRegistration] event : "+ev);
+					runner.addEvent(ev);
+				}
+			}
 
 			addRunner(iwc, personalID, runner);
 			return runner;
@@ -1076,6 +1107,15 @@ public class LandsmotRegistration extends Block {
 	protected LandsmotBusiness getRunBusiness(IWApplicationContext iwac) {
 		try {
 			return (LandsmotBusiness) IBOLookup.getServiceInstance(iwac, LandsmotBusiness.class);
+		}
+		catch (IBOLookupException e) {
+			throw new IBORuntimeException(e);
+		}
+	}
+	
+	protected LandsmotEventBusiness getEventBusiness(IWApplicationContext iwac) {
+		try {
+			return (LandsmotEventBusiness) IBOLookup.getServiceInstance(iwac, LandsmotEventBusiness.class);
 		}
 		catch (IBOLookupException e) {
 			throw new IBORuntimeException(e);

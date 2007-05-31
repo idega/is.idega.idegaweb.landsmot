@@ -1,7 +1,11 @@
 package is.idega.idegaweb.landsmot.business;
 
 
+import is.idega.idegaweb.landsmot.data.LandsmotEvent;
+
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import com.idega.core.location.data.Country;
 import com.idega.user.data.Gender;
@@ -34,6 +38,8 @@ public class Runner {
 	private boolean agree;
 	private float amount;
 
+	private Collection events;
+	
 	public User getUser() {
 		return this.user;
 	}
@@ -226,5 +232,19 @@ public class Runner {
 	
 	public void setAmount(float amount) {
 		this.amount = amount;
+	}
+	
+	public Collection getEvents() {
+		if (events == null) {
+			events = new ArrayList();
+		}
+		
+		return events;
+	}
+	
+	public void addEvent(LandsmotEvent event) {
+		if (event != null && !getEvents().contains(event)) {
+			getEvents().add(event);
+		}
 	}
 }
