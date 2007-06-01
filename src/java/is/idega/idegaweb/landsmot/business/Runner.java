@@ -15,14 +15,6 @@ public class Runner {
 	
 	private User user;
 
-	private boolean rentChip;
-	private boolean ownChip;
-	private boolean buyChip;
-	private String chipNumber;
-	private boolean transportOrdered;
-	private boolean noTransportOrdered;
-	private String shirtSize;
-
 	private String name;
 	private String personalID;
 	private Date dateOfBirth;
@@ -46,76 +38,6 @@ public class Runner {
 
 	public void setUser(User user) {
 		this.user = user;
-	}
-
-	public boolean isRentChip() {
-		return this.rentChip;
-	}
-
-	public void setRentChip(boolean rentChip) {
-		this.rentChip = rentChip;
-		if (rentChip) {
-			setOwnChip(false);
-			setBuyChip(false);
-		}
-	}
-
-	public boolean isOwnChip() {
-		return this.ownChip;
-	}
-
-	public void setOwnChip(boolean ownChip) {
-		this.ownChip = ownChip;
-		if (ownChip) {
-			setRentChip(false);
-			setBuyChip(false);
-		}
-	}
-
-	public boolean isBuyChip() {
-		return this.buyChip;
-	}
-
-	public void setBuyChip(boolean buyChip) {
-		this.buyChip = buyChip;
-		if (buyChip) {
-			setOwnChip(false);
-			setRentChip(false);
-		}
-	}
-
-	public String getChipNumber() {
-		return this.chipNumber;
-	}
-
-	public void setChipNumber(String chipNumber) {
-		this.chipNumber = chipNumber;
-	}
-	
-	public boolean isTransportOrdered() {
-		return this.transportOrdered;
-	}
-
-	public void setTransportOrdered(boolean transportOrdered) {
-		this.noTransportOrdered = !transportOrdered;
-		this.transportOrdered = transportOrdered;
-	}
-
-	public boolean isNoTransportOrdered() {
-		return this.noTransportOrdered;
-	}
-
-	public void setNoTransportOrdered(boolean noTransportOrdered) {
-		this.transportOrdered = !noTransportOrdered;
-		this.noTransportOrdered = noTransportOrdered;
-	}
-
-	public String getShirtSize() {
-		return this.shirtSize;
-	}
-
-	public void setShirtSize(String shirtSize) {
-		this.shirtSize = shirtSize;
 	}
 
 	public String getName() {
