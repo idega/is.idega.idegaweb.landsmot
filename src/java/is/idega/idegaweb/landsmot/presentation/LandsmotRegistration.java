@@ -527,7 +527,7 @@ public class LandsmotRegistration extends Block {
 		table.setHeight(row++, 18);
 		
 		Map runners = (Map) iwc.getSessionAttribute(SESSION_ATTRIBUTE_RUNNER_MAP);
-		Table runnerTable = new Table(3, runners.size() + 1);
+		Table runnerTable = new Table();
 		runnerTable.setWidth(Table.HUNDRED_PERCENT);
 		runnerTable.add(getHeader(localize("run_reg.name", "Name")), 1, 1);
 		runnerTable.add(getHeader(localize("run_reg.event", "Event")), 2, 1);
