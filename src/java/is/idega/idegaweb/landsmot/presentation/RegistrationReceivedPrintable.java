@@ -25,7 +25,7 @@ import com.idega.util.LocaleUtil;
  */
 public class RegistrationReceivedPrintable extends Window {
 	
-	public final static String IW_BUNDLE_IDENTIFIER = "is.idega.idegaweb.marathon";
+	public final static String IW_BUNDLE_IDENTIFIER = "is.idega.idegaweb.landsmot";
 	
 	public RegistrationReceivedPrintable() {
 		setResizable(true);
@@ -101,8 +101,8 @@ public class RegistrationReceivedPrintable extends Window {
 
 		table.setHeight(row++, 16);
 		table.add(getText(iwrb.getLocalizedString("run_reg.best_regards", "Best regards,")), 1, row++);
-		table.add(getText(iwrb.getLocalizedString("run_reg.reykjavik_marathon", "Reykjavik Marathon")), 1, row++);
-		table.add(getText("www.marathon.is"), 1, row++);
+		table.add(getText(iwrb.getLocalizedString("run_reg.landsmot", "Landsmot UMFI")), 1, row++);
+		table.add(getText("skraning.felix.is"), 1, row++);
 		
 		table.setHeight(row++, 16);
 		t.add(table, 1, 1);
