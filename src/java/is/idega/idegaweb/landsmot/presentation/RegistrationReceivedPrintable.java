@@ -15,7 +15,6 @@ import com.idega.presentation.Table;
 import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.PrintButton;
 import com.idega.presentation.ui.Window;
-import com.idega.user.data.Group;
 import com.idega.util.IWTimestamp;
 import com.idega.util.LocaleUtil;
 
@@ -62,23 +61,17 @@ public class RegistrationReceivedPrintable extends Window {
 
 		Table runnerTable = new Table(5, runners.size() + 3);
 		runnerTable.setWidth(Table.HUNDRED_PERCENT);
-		runnerTable.add(getHeader(iwrb.getLocalizedString("run_reg.runner_name", "Runner name")), 1, 1);
-		runnerTable.add(getHeader(iwrb.getLocalizedString("run_reg.run", "Run")), 2, 1);
-		runnerTable.add(getHeader(iwrb.getLocalizedString("run_reg.distance", "Distance")), 3, 1);
-		runnerTable.add(getHeader(iwrb.getLocalizedString("run_reg.race_number", "Race number")), 4, 1);
-		runnerTable.add(getHeader(iwrb.getLocalizedString("run_reg.shirt_size", "Shirt size")), 5, 1);
+		runnerTable.add(getHeader(iwrb.getLocalizedString("run_reg.name", "Name")), 1, 1);
+		runnerTable.add(getHeader(iwrb.getLocalizedString("run_reg.event", "Event")), 2, 1);
 		table.add(runnerTable, 1, row++);
 		int runRow = 2;
 		Iterator iter = runners.iterator();
 		while (iter.hasNext()) {
-			//Participant participant = (Participant) iter.next();
-			Group run = null;//participant.getRunTypeGroup();
-			Group distance = null;//participant.getRunDistanceGroup();
-			
-			//runnerTable.add(getText(participant.getUser().getName()), 1, runRow);
-			runnerTable.add(getText(iwrb.getLocalizedString(run.getName(), run.getName())), 2, runRow);
-			runnerTable.add(getText(iwrb.getLocalizedString(distance.getName(), distance.getName())), 3, runRow);
-			//runnerTable.add(getText(String.valueOf(participant.getParticipantNumber())), 4, runRow);
+			Object obj = iter.next();
+			is.idega.idegaweb.landsmot.data.LandsmotRegistration reg = (is.idega.idegaweb.landsmot.data.LandsmotRegistration) obj;
+
+			runnerTable.add(getText(reg.getUser().getName()), 1, runRow);
+			runnerTable.add(getText(reg.getEvent().getName()), 2, runRow++);
 		}
 		
 		Table creditCardTable = new Table(2, 3);

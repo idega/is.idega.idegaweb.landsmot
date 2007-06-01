@@ -870,26 +870,17 @@ public class LandsmotRegistration extends Block {
 
 		Table runnerTable = new Table(5, runners.size() + 3);
 		runnerTable.setWidth(Table.HUNDRED_PERCENT);
-		runnerTable.add(getHeader(localize("run_reg.runner_name", "Runner name")), 1, 1);
-		runnerTable.add(getHeader(localize("run_reg.run", "Run")), 2, 1);
-		runnerTable.add(getHeader(localize("run_reg.distance", "Distance")), 3, 1);
-		runnerTable.add(getHeader(localize("run_reg.race_number", "Race number")), 4, 1);
-		runnerTable.add(getHeader(localize("run_reg.shirt_size", "Shirt size")), 5, 1);
+		runnerTable.add(getHeader(localize("run_reg.name", "Name")), 1, 1);
+		runnerTable.add(getHeader(localize("run_reg.event", "Event")), 2, 1);
 		table.add(runnerTable, 1, row++);
 		int runRow = 2;
 		Iterator iter = runners.iterator();
 		while (iter.hasNext()) {
 			Object obj = iter.next();
 			is.idega.idegaweb.landsmot.data.LandsmotRegistration reg = (is.idega.idegaweb.landsmot.data.LandsmotRegistration) obj;
-			//Participant participant = (Participant) iter.next();
-//			Group run = null;//participant.getRunTypeGroup();
-//			Group distance = null;//participant.getRunDistanceGroup();
-			
-			//runnerTable.add(getText(participant.getUser().getName()), 1, runRow);
-			runnerTable.add(getText(reg.getUser().getName()), 2, runRow);
-			runnerTable.add(getText(reg.getEvent().getName()), 3, runRow++);
-//			runnerTable.add(getText(localize(distance.getName(), distance.getName())), 3, runRow);
-			//runnerTable.add(getText(String.valueOf(participant.getParticipantNumber())), 4, runRow);
+
+			runnerTable.add(getText(reg.getUser().getName()), 1, runRow);
+			runnerTable.add(getText(reg.getEvent().getName()), 2, runRow++);
 		}
 		
 		if (doPayment) {
