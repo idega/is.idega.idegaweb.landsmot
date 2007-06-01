@@ -57,13 +57,8 @@ import com.idega.util.IWTimestamp;
 
 public class LandsmotRegistration extends Block {
 	
-	private static final long serialVersionUID = 3105168986587179339L;
-	
-	public final static String STYLENAME_FORM_ELEMENT = "FormElement";
 	public final static String STYLENAME_HEADER = "Header";
 	public final static String STYLENAME_TEXT = "Text";
-	public final static String STYLENAME_SMALL_TEXT = "SmallText";
-	public final static String STYLENAME_LINK = "Link";
 	public final static String STYLENAME_INTERFACE = "Interface";
 	public final static String STYLENAME_INTERFACE_BUTTON = "InterfaceButton";
 	public final static String STYLENAME_CHECKBOX = "CheckBox";
@@ -98,6 +93,24 @@ public class LandsmotRegistration extends Block {
 	private static final String PARAMETER_AMOUNT = "prm_amount";
 	private static final String PARAMETER_CARD_HOLDER_EMAIL = "prm_card_holder_email";
 	private static final String PARAMETER_REFERENCE_NUMBER = "prm_reference_number";
+	
+	//localized strings
+	public static final String RR_INFO_RED_STAR = "run_reg.info_red_star";
+	public static final String RR_PRIMARY_DD = "run_reg.primary_dd_lable";
+	public static final String RR_SECONDARY_DD = "run_reg.secondary_dd_label";
+	public static final String RR_NAME = "run_reg.name";
+	public static final String RR_NATIONALITY = "run_reg.nationality";
+	public static final String RR_SSN = "run_reg.ssn";
+	public static final String RR_GENDER = "run_reg.gender";
+	public static final String RR_FEMALE = "run_reg.female";
+	public static final String RR_MALE = "run_reg.male";
+	public static final String RR_ADDRESS = "run_reg.address";
+	public static final String RR_POSTAL = "run_reg.postal";
+	public static final String RR_CITY = "run_reg.city";
+	public static final String RR_COUNTRY = "run_reg.country";
+	public static final String RR_TEL = "run_reg.tel";
+	public static final String RR_MOBILE = "run_reg.mobile";
+	public static final String RR_EMAIL = "run_reg.email";
 	
 	private static final int ACTION_STEP_ONE = 1;
 	private static final int ACTION_STEP_TWO = 2;
@@ -818,7 +831,7 @@ public class LandsmotRegistration extends Block {
 			showReceipt(iwc, participants, amount, hiddenCardNumber, paymentStamp, doPayment);
 		}
 		catch (IDOCreateException ice) {
-			getParentPage().setAlertOnLoad(localize("run_reg.save_failed", "There was an error when trying to finish registration.  Please contact the marathon.is office."));
+			getParentPage().setAlertOnLoad(localize("run_reg.save_failed", "There was an error when trying to finish registration.  Please contact the Landsmot's office."));
 			ice.printStackTrace();
 			stepSix(iwc);
 		}
@@ -893,8 +906,8 @@ public class LandsmotRegistration extends Block {
 
 		table.setHeight(row++, 16);
 		table.add(getText(localize("run_reg.best_regards", "Best regards,")), 1, row++);
-		table.add(getText(localize("run_reg.reykjavik_marathon", "Reykjavik Marathon")), 1, row++);
-		table.add(getText("www.marathon.is"), 1, row++);
+		table.add(getText(localize("run_reg.landsmot", "Landsmot UMFI")), 1, row++);
+		table.add(getText("skraning.felix.is"), 1, row++);
 		
 		table.setHeight(row++, 16);
 		
@@ -1121,78 +1134,4 @@ public class LandsmotRegistration extends Block {
 			throw new IBORuntimeException(e);
 		}
 	}
-	
-	public static final String PROPERTY_MERCHANT_PK = "merchant_pk";
-	public static final String PROPERTY_STAFF_GROUP_ID = "staff_group_id";
-  
-  public static final String GROUP_TYPE_RUN = "iwma_run";
-/*  public static final String GROUP_TYPE_RUN_MARATHON = "iwma_run_marathon";
-  public static final String GROUP_TYPE_RUN_LAUGAVEGUR = "iwma_run_laugavegur";
-  public static final String GROUP_TYPE_RUN_MIDNIGHT = "iwma_run_midnight";*/
-  public static final String GROUP_TYPE_RUN_YEAR = "iwma_run_year";
-  public static final String GROUP_TYPE_RUN_DISTANCE = "iwma_run_distance";
-  public static final String GROUP_TYPE_RUN_GROUP = "iwma_run_group";
-  public static final String PARAMETER_SORT_BY = "iwma_sort_by";
-  
-  public static final String PARAMETER_SSN_IS = "prm_ssn_is";
-  public static final String PARAMETER_SSN = "prm_ssn";
-  public static final String PARAMETER_FEMALE = "2";
-  public static final String PARAMETER_MALE = "1";
-  public static final String PARAMETER_POSTAL = "prm_postal";
-  public static final String PARAMETER_TEL ="prm_tel";
-  public static final String PARAMETER_MOBILE = "prm_mobile";
-  public static final String PARAMETER_TSHIRT = "prm_tshirt";
-  public static final String PARAMETER_TSHIRT_S = "prm_small";
-  public static final String PARAMETER_TSHIRT_M = "prm_medium";
-  public static final String PARAMETER_TSHIRT_L = "prm_large";
-  public static final String PARAMETER_TSHIRT_XL = "prm_xlarge";
-  public static final String PARAMETER_TSHIRT_XXL = "prm_xxlarge";
-  public static final String PARAMETER_OWN_CHIP = "prm_own_chip";
-  public static final String PARAMETER_BUY_CHIP = "prm_buy_chip";
-  public static final String PARAMETER_RENT_CHIP = "prm_rent_chip";
-  public static final String PARAMETER_GROUP_COMP = "prm_group_comp";
-  public static final String PARAMETER_GROUP_NAME = "prm_group_name";
-  public static final String PARAMETER_BEST_TIME = "prm_best_time";
-  public static final String PARAMETER_GOAL_TIME = "prm_goal_time";
-  public static final String PARAMETER_TOTAL = "prm_total";
-  public static final String PARAMETER_GROUPS = "prm_groups";
-  public static final String PARAMETER_GROUPS_COMPETITION = "prm_groups_competition";
-  public static final String PARAMETER_AGREEMENT = "prm_agreement";
-  public static final String PARAMETER_DISAGREE = Boolean.FALSE.toString();
-  public static final String PARAMETER_PAY_METHOD = "prm_pay_method";
-  public static final String PARAMETER_PARTICIPANT_NUMBER = "prm_parti_nr";
-	
-  //localized strings
-  public static final String RR_INFO_RED_STAR = "run_reg.info_red_star";
-  public static final String RR_PRIMARY_DD = "run_reg.primary_dd_lable";
-  public static final String RR_SECONDARY_DD = "run_reg.secondary_dd_label";
-  public static final String RR_NAME = "run_reg.name";
-  public static final String RR_NATIONALITY = "run_reg.nationality";
-  public static final String RR_SSN = "run_reg.ssn";
-  public static final String RR_GENDER = "run_reg.gender";
-  public static final String RR_FEMALE = "run_reg.female";
-  public static final String RR_MALE = "run_reg.male";
-  public static final String RR_ADDRESS = "run_reg.address";
-  public static final String RR_POSTAL = "run_reg.postal";
-  public static final String RR_CITY = "run_reg.city";
-  public static final String RR_COUNTRY = "run_reg.country";
-  public static final String RR_TEL = "run_reg.tel";
-  public static final String RR_MOBILE = "run_reg.mobile";
-  public static final String RR_EMAIL = "run_reg.email";
-  public static final String RR_TSHIRT = "run_reg.t_shirt";
-  public static final String RR_CHIP_TIME = "run_reg.champion_chip_timing";
-  public static final String RR_CHIP_LINK = "run_reg.champion_chip_link";
-  public static final String RR_OWN_CHIP = "run_reg.own_chip";
-  public static final String RR_BUY_CHIP = "run_reg.buy_chip";
-  public static final String RR_RENT_CHIP = "run_reg.rent_chip";
-  public static final String RR_GROUP_COMP = "run_reg.group_competition";
-  public static final String RR_GROUP_NAME = "run_reg.group_name";
-  public static final String RR_BEST_TIME = "run_reg.best_time";
-  public static final String RR_GOAL_TIME = "run_reg.goal_time";
-  public static final String RR_AGREEMENT = "run_reg.agreement";
-	public static final String RR_AGREE = "run_reg.agree";
-	public static final String RR_DISAGREE = "run_reg.disagree";
-  public static final int RYSDD_TOTAL = 1;
-  public static final int RYSDD_GROUPS = 2;
-  public static final int RYSDD_GROUPS_COMP = 3;
 }
