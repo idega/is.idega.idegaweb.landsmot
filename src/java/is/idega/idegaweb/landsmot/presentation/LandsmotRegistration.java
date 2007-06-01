@@ -51,7 +51,6 @@ import com.idega.user.business.NoEmailFoundException;
 import com.idega.user.business.NoPhoneFoundException;
 import com.idega.user.business.UserBusiness;
 import com.idega.user.data.Gender;
-import com.idega.user.data.Group;
 import com.idega.user.data.User;
 import com.idega.util.IWTimestamp;
 
@@ -124,7 +123,10 @@ public class LandsmotRegistration extends Block {
 	private IWResourceBundle iwrb = null;
 	private IWBundle iwb = null;
 	public final static String IW_BUNDLE_IDENTIFIER = "is.idega.idegaweb.landsmot";
-
+	
+	public String getBundleIdentifier() {
+		return IW_BUNDLE_IDENTIFIER;
+	}
 
 	public void main(IWContext iwc) throws Exception {
 		
@@ -224,6 +226,7 @@ public class LandsmotRegistration extends Block {
 		int iRow = 1;
 
 		SelectionBox eventSelect = new SelectionBox(PARAMETER_EVENT);
+		eventSelect.setAsNotEmpty(localize("you_must_select_at_lease_one_event", "You must selecte at least one event"));
 		Collection events = getEventBusiness(iwc).getAllSingleEvents();
 		if (events != null) {
 			eventSelect.addMenuElements(events);
@@ -235,7 +238,6 @@ public class LandsmotRegistration extends Block {
 		choiceTable.add(redStar, 1, iRow++);
 		choiceTable.mergeCells(1, iRow, choiceTable.getColumns(), iRow);
 		choiceTable.add(eventSelect, 1, iRow);
-
 		choiceTable.setHeight(iRow++, 12);
 		
 		TextInput nameField = (TextInput) getStyledInterface(new TextInput(PARAMETER_NAME));
@@ -823,8 +825,11 @@ public class LandsmotRegistration extends Block {
 				properties = getRunBusiness(iwc).authorizePayment(nameOnCard, cardNumber, expiresMonth, expiresYear, ccVerifyNumber, amount, "ISK", referenceNumber);
 			}
 			Collection participants = getRunBusiness(iwc).saveParticipants(runners, email, hiddenCardNumber, amount, paymentStamp, iwc.getCurrentLocale());
+			System.out.println("[LandsmotRegistration] TODO, CREDITCARD AUTHORIZATION");
 			if (doPayment) {
-				getRunBusiness(iwc).finishPayment(properties);
+				String authID = getRunBusiness(iwc).finishPayment(properties);
+				System.out.println("[LandsmotRegistration] auth ID : "+authID);
+				// Set the authIDs on the participants...
 			}
 			iwc.removeSessionAttribute(SESSION_ATTRIBUTE_RUNNER_MAP);
 			
@@ -874,13 +879,16 @@ public class LandsmotRegistration extends Block {
 		int runRow = 2;
 		Iterator iter = runners.iterator();
 		while (iter.hasNext()) {
+			Object obj = iter.next();
+			is.idega.idegaweb.landsmot.data.LandsmotRegistration reg = (is.idega.idegaweb.landsmot.data.LandsmotRegistration) obj;
 			//Participant participant = (Participant) iter.next();
-			Group run = null;//participant.getRunTypeGroup();
-			Group distance = null;//participant.getRunDistanceGroup();
+//			Group run = null;//participant.getRunTypeGroup();
+//			Group distance = null;//participant.getRunDistanceGroup();
 			
 			//runnerTable.add(getText(participant.getUser().getName()), 1, runRow);
-			runnerTable.add(getText(localize(run.getName(), run.getName())), 2, runRow);
-			runnerTable.add(getText(localize(distance.getName(), distance.getName())), 3, runRow);
+			runnerTable.add(getText(reg.getUser().getName()), 2, runRow);
+			runnerTable.add(getText(reg.getEvent().getName()), 3, runRow++);
+//			runnerTable.add(getText(localize(distance.getName(), distance.getName())), 3, runRow);
 			//runnerTable.add(getText(String.valueOf(participant.getParticipantNumber())), 4, runRow);
 		}
 		
@@ -970,7 +978,6 @@ public class LandsmotRegistration extends Block {
 				String[] events = iwc.getParameterValues(PARAMETER_EVENT);
 				for (int i = 0; i < events.length; i++) {
 					LandsmotEvent ev = getEventBusiness(iwc).getEvent(new Integer(events[i]));
-					System.out.println("[LandsmotRegistration] event : "+ev);
 					runner.addEvent(ev);
 				}
 			}
@@ -1015,14 +1022,14 @@ public class LandsmotRegistration extends Block {
 		iwc.setSessionAttribute(SESSION_ATTRIBUTE_RUNNER_MAP, runnerMap);
 	}
 	
-	private void removeRunner(IWContext iwc, String key) {
-		Map runnerMap = (Map) iwc.getSessionAttribute(SESSION_ATTRIBUTE_RUNNER_MAP);
-		if (runnerMap == null) {
-			runnerMap = new HashMap();
-		}
-		runnerMap.remove(key);
-		iwc.setSessionAttribute(SESSION_ATTRIBUTE_RUNNER_MAP, runnerMap);
-	}
+//	private void removeRunner(IWContext iwc, String key) {
+//		Map runnerMap = (Map) iwc.getSessionAttribute(SESSION_ATTRIBUTE_RUNNER_MAP);
+//		if (runnerMap == null) {
+//			runnerMap = new HashMap();
+//		}
+//		runnerMap.remove(key);
+//		iwc.setSessionAttribute(SESSION_ATTRIBUTE_RUNNER_MAP, runnerMap);
+//	}
 
 	protected Table getPhasesTable(int phase, int totalPhases, String key, String defaultText) {
 		Table table = new Table(2, 1);

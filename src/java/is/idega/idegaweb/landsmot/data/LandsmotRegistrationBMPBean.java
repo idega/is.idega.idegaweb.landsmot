@@ -18,6 +18,7 @@ public class LandsmotRegistrationBMPBean extends GenericEntity implements Landsm
 
 	private static final String TABLE_NAME = "LA_EVENT_REGISTRATION";
 	private static final String COLUMN_USER = "IC_USER_ID";
+	private static final String COLUMN_EVENT = "LA_EVENT_ID";
 	private static final String COLUMN_DATE = "REGISTRATION_DATE";
 	private static final String COLUMN_CREDITCARD_INFO = "CC_INFO_ID";
 	private static final String COLUMN_CREDITCARD_AUTHORIZATION = "CC_AUTH_CODE";
@@ -28,12 +29,12 @@ public class LandsmotRegistrationBMPBean extends GenericEntity implements Landsm
 
 	public void initializeAttributes() {
 		addAttribute(getIDColumnName());
-		addAttribute(COLUMN_USER, "user", User.class);
+		addManyToOneRelationship(COLUMN_USER, User.class);
 		addAttribute(COLUMN_DATE, "date", Timestamp.class);
 		addManyToOneRelationship(COLUMN_CREDITCARD_INFO, CreditCardInformation.class);
 		addAttribute(COLUMN_CREDITCARD_AUTHORIZATION, "cc_auth", String.class, 10);
-		addManyToManyRelationShip(LandsmotEvent.class);
-		addManyToManyRelationShip(LandsmotGroupRegistrationBMPBean.class);
+		addManyToOneRelationship(COLUMN_EVENT, LandsmotEvent.class);
+		addManyToManyRelationShip(LandsmotGroupRegistration.class);
 	}
 
 	public void setUser(User user) {
@@ -68,14 +69,31 @@ public class LandsmotRegistrationBMPBean extends GenericEntity implements Landsm
 		return getStringColumnValue(COLUMN_CREDITCARD_AUTHORIZATION);
 	}
 	
-	public Collection ejbFindByEvent(LandsmotEvent event) throws IDORelationshipException, FinderException {
+	public void setEvent(LandsmotEvent event) {
+		this.setColumn(COLUMN_EVENT, event);
+	}
+	
+	public LandsmotEvent getEvent() {
+		return (LandsmotEvent) getColumnValue(COLUMN_EVENT);
+	}
+	
+	public Object ejbFindByUserAndEvent(User user, LandsmotEvent event) throws FinderException {
 		Table table = new Table(this);
-		Table evTable = new Table(event);
+	
+		SelectQuery query = new SelectQuery(table);
+		query.addColumn(new Column(table, getIDColumnName()));
+		query.addCriteria(new MatchCriteria(new Column(table, COLUMN_USER), MatchCriteria.EQUALS, user));
+		query.addCriteria(new MatchCriteria(new Column(table, COLUMN_EVENT), MatchCriteria.EQUALS, event));
+		
+		return idoFindOnePKByQuery(query);
+	}
+	
+	public Collection ejbFindByEvent(LandsmotEvent event) throws FinderException {
+		Table table = new Table(this);
 		
 		SelectQuery query = new SelectQuery(table);
 		query.addColumn(new Column(table, getIDColumnName()));
-		query.addJoin(table, evTable);
-		query.addCriteria(new MatchCriteria(new Column(evTable, "LA_EVENT_ID"), MatchCriteria.EQUALS, event));
+		query.addCriteria(new MatchCriteria(new Column(table, COLUMN_EVENT), MatchCriteria.EQUALS, event));
 		
 		return idoFindPKsByQuery(query);
 	}

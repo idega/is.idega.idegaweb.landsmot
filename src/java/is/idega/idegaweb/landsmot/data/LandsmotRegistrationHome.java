@@ -6,6 +6,7 @@ import java.util.Collection;
 import javax.ejb.CreateException;
 import com.idega.data.IDOHome;
 import javax.ejb.FinderException;
+import com.idega.user.data.User;
 
 public interface LandsmotRegistrationHome extends IDOHome {
 	public LandsmotRegistration create() throws CreateException;
@@ -13,8 +14,10 @@ public interface LandsmotRegistrationHome extends IDOHome {
 	public LandsmotRegistration findByPrimaryKey(Object pk)
 			throws FinderException;
 
-	public Collection findByEvent(LandsmotEvent event)
-			throws IDORelationshipException, FinderException;
+	public LandsmotRegistration findByUserAndEvent(User user,
+			LandsmotEvent event) throws FinderException;
+
+	public Collection findByEvent(LandsmotEvent event) throws FinderException;
 
 	public Collection findByGroupRegistration(
 			LandsmotGroupRegistration groupRegistration)

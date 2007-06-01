@@ -46,4 +46,14 @@ public interface LandsmotRegistration extends IDOEntity {
 	 * @see is.idega.idegaweb.landsmot.data.LandsmotRegistrationBMPBean#getCreditCardAuthorizationCode
 	 */
 	public String getCreditCardAuthorizationCode();
+
+	/**
+	 * @see is.idega.idegaweb.landsmot.data.LandsmotRegistrationBMPBean#setEvent
+	 */
+	public void setEvent(LandsmotEvent event);
+
+	/**
+	 * @see is.idega.idegaweb.landsmot.data.LandsmotRegistrationBMPBean#getEvent
+	 */
+	public LandsmotEvent getEvent();
 }

@@ -5,6 +5,7 @@ import com.idega.data.IDORelationshipException;
 import java.util.Collection;
 import javax.ejb.CreateException;
 import javax.ejb.FinderException;
+import com.idega.user.data.User;
 import com.idega.data.IDOEntity;
 import com.idega.data.IDOFactory;
 
@@ -23,8 +24,16 @@ public class LandsmotRegistrationHomeImpl extends IDOFactory implements
 		return (LandsmotRegistration) super.findByPrimaryKeyIDO(pk);
 	}
 
-	public Collection findByEvent(LandsmotEvent event)
-			throws IDORelationshipException, FinderException {
+	public LandsmotRegistration findByUserAndEvent(User user,
+			LandsmotEvent event) throws FinderException {
+		IDOEntity entity = this.idoCheckOutPooledEntity();
+		Object pk = ((LandsmotRegistrationBMPBean) entity)
+				.ejbFindByUserAndEvent(user, event);
+		this.idoCheckInPooledEntity(entity);
+		return this.findByPrimaryKey(pk);
+	}
+
+	public Collection findByEvent(LandsmotEvent event) throws FinderException {
 		IDOEntity entity = this.idoCheckOutPooledEntity();
 		Collection ids = ((LandsmotRegistrationBMPBean) entity)
 				.ejbFindByEvent(event);

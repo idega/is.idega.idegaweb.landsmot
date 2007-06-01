@@ -6,6 +6,71 @@
       <type>java.lang.String</type>
       <value>is.idega.idegaweb.landsmot</value>
     </key>
+    <key>
+      <name>iw_components</name>
+      <value>
+        <map>
+          <key>
+            <name>is.idega.idegaweb.landsmot.data.LandsmotEvent</name>
+            <value>
+              <map>
+                <key>
+                  <name>component_property_file</name>
+                  <type>java.lang.String</type>
+                  <value>is.idega.idegaweb.landsmot.data.LandsmotEvent.pxml</value>
+                </key>
+              </map>
+            </value>
+            <type>map</type>
+          </key>
+          <key>
+            <name>is.idega.idegaweb.landsmot.data.LandsmotGroupRegistration</name>
+            <value>
+              <map>
+                <key>
+                  <name>component_property_file</name>
+                  <type>java.lang.String</type>
+                  <value>is.idega.idegaweb.landsmot.data.LandsmotGroupRegistration.pxml</value>
+                </key>
+              </map>
+            </value>
+            <type>map</type>
+          </key>
+          <key>
+            <name>is.idega.idegaweb.landsmot.data.LandsmotRegistration</name>
+            <value>
+              <map>
+                <key>
+                  <name>component_property_file</name>
+                  <type>java.lang.String</type>
+                  <value>is.idega.idegaweb.landsmot.data.LandsmotRegistration.pxml</value>
+                </key>
+              </map>
+            </value>
+            <type>map</type>
+          </key>
+          <key>
+            <name>is.idega.idegaweb.landsmot.presentation.LandsmotRegistration</name>
+            <value>
+              <map>
+                <key>
+                  <name>component_property_file</name>
+                  <type>java.lang.String</type>
+                  <value>is.idega.idegaweb.landsmot.presentation.LandsmotRegistration.pxml</value>
+                </key>
+              </map>
+            </value>
+            <type>map</type>
+          </key>
+        </map>
+      </value>
+      <type>map</type>
+    </key>
+    <key>
+      <name>disable_payment_authorization_process</name>
+      <type>java.lang.String</type>
+      <value>true</value>
+    </key>
   </map>
 </pxml>
 

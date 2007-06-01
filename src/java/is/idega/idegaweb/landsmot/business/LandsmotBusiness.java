@@ -13,17 +13,23 @@ public interface LandsmotBusiness extends IBOService {
 	/**
 	 * @see is.idega.idegaweb.landsmot.business.LandsmotBusinessBean#saveParticipants
 	 */
-	public Collection saveParticipants(Collection runners, String email, String hiddenCardNumber, double amount, IWTimestamp date, Locale locale) throws IDOCreateException, RemoteException;
+	public Collection saveParticipants(Collection runners, String email,
+			String hiddenCardNumber, double amount, IWTimestamp date,
+			Locale locale) throws IDOCreateException, RemoteException;
 
 	/**
 	 * @see is.idega.idegaweb.landsmot.business.LandsmotBusinessBean#finishPayment
 	 */
-	public void finishPayment(String properties) throws CreditCardAuthorizationException, RemoteException;
+	public String finishPayment(String properties)
+			throws CreditCardAuthorizationException, RemoteException;
 
 	/**
 	 * @see is.idega.idegaweb.landsmot.business.LandsmotBusinessBean#authorizePayment
 	 */
-	public String authorizePayment(String nameOnCard, String cardNumber, String monthExpires, String yearExpires, String ccVerifyNumber, double amount, String currency, String referenceNumber) throws CreditCardAuthorizationException, RemoteException;
+	public String authorizePayment(String nameOnCard, String cardNumber,
+			String monthExpires, String yearExpires, String ccVerifyNumber,
+			double amount, String currency, String referenceNumber)
+			throws CreditCardAuthorizationException, RemoteException;
 
 	/**
 	 * @see is.idega.idegaweb.landsmot.business.LandsmotBusinessBean#getCreditCardImages
