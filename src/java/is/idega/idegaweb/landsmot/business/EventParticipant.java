@@ -6,12 +6,13 @@ import is.idega.idegaweb.landsmot.data.LandsmotEvent;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 
 import com.idega.core.location.data.Country;
 import com.idega.user.data.Gender;
 import com.idega.user.data.User;
 
-public class Runner {
+public class EventParticipant {
 	
 	private User user;
 
@@ -29,6 +30,8 @@ public class Runner {
 	private String mobilePhone;
 	private boolean agree;
 	private float amount;
+	private boolean isGroup;
+	private Collection participants;
 
 	private Collection events;
 	
@@ -168,5 +171,26 @@ public class Runner {
 		if (event != null && !getEvents().contains(event)) {
 			getEvents().add(event);
 		}
+	}
+
+	public boolean isGroup() {
+		return isGroup;
+	}
+
+	public void setGroup(boolean isGroup) {
+		this.isGroup = isGroup;
+	}
+
+	public Collection getParticipants() {
+		return participants;
+	}
+	
+	public void addParticipant(User user) {
+		if (participants == null) {
+			participants = new LinkedList();
+		}
+//		if (!participants.contains(user)) {
+			participants.add(user);
+//		}
 	}
 }

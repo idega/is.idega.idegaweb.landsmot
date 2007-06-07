@@ -139,7 +139,7 @@ public class LandsmotBusinessBean extends IBOServiceBean implements LandsmotBusi
 		if (runners != null) {
 			Iterator iter = runners.iterator();
 			while (iter.hasNext()) {
-				Runner runner = (Runner) iter.next();
+				EventParticipant runner = (EventParticipant) iter.next();
 				Collection evs = runner.getEvents();
 				if (evs != null && !evs.isEmpty()) {
 					Iterator eter = evs.iterator();
