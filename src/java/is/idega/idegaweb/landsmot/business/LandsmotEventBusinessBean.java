@@ -6,6 +6,7 @@ import is.idega.idegaweb.landsmot.data.LandsmotRegistration;
 import is.idega.idegaweb.landsmot.data.LandsmotRegistrationHome;
 
 import java.util.Collection;
+import java.util.Locale;
 
 import javax.ejb.CreateException;
 import javax.ejb.FinderException;
@@ -14,7 +15,11 @@ import com.idega.business.IBOServiceBean;
 import com.idega.data.IDOLookup;
 import com.idega.data.IDOLookupException;
 import com.idega.data.IDORuntimeException;
+import com.idega.idegaweb.IWResourceBundle;
+import com.idega.idegaweb.UnavailableIWContext;
+import com.idega.presentation.IWContext;
 import com.idega.user.data.User;
+import com.idega.user.data.UserHome;
 import com.idega.util.IWTimestamp;
 
 public class LandsmotEventBusinessBean extends IBOServiceBean implements LandsmotEventBusiness{
@@ -65,6 +70,34 @@ public class LandsmotEventBusinessBean extends IBOServiceBean implements Landsmo
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	public String getUserNameDWR(String personalID, String localeStr) {
+		try {
+			if (personalID != null && !personalID.trim().equals("")) {
+				UserHome uHome = (UserHome) IDOLookup.getHome(User.class);
+				User user = uHome.findByPersonalID(personalID);
+				return user.getName();
+			} else {
+				return "";
+			}
+		} catch (IDOLookupException e) {
+			e.printStackTrace();
+		} catch (FinderException e) {
+		}
+		
+		try {
+			IWContext iwc = IWContext.getInstance();
+			Locale locale = iwc.getCurrentLocale();
+			IWResourceBundle iwrb = getBundle().getResourceBundle(locale);
+			return iwrb.getLocalizedString("landsmot.user_not_found", "User not found");
+		} catch (UnavailableIWContext e) {
+			return "User not found";
+		}
+	}
+	
+	public String getBundleIdentifier() {
+		return is.idega.idegaweb.landsmot.presentation.LandsmotRegistration.IW_BUNDLE_IDENTIFIER;
 	}
 	
 	private LandsmotRegistrationHome getLandsmotRegistrationHome() {

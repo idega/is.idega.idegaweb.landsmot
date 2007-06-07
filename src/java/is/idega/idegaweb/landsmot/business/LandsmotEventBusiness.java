@@ -30,4 +30,15 @@ public interface LandsmotEventBusiness extends IBOService {
 	 * @see is.idega.idegaweb.landsmot.business.LandsmotEventBusinessBean#getEvent
 	 */
 	public LandsmotEvent getEvent(Object primaryKey) throws RemoteException;
+
+	/**
+	 * @see is.idega.idegaweb.landsmot.business.LandsmotEventBusinessBean#getUserNameDWR
+	 */
+	public String getUserNameDWR(String personalID, String localeStr)
+			throws RemoteException;
+
+	/**
+	 * @see is.idega.idegaweb.landsmot.business.LandsmotEventBusinessBean#getBundleIdentifier
+	 */
+	public String getBundleIdentifier() throws RemoteException;
 }
