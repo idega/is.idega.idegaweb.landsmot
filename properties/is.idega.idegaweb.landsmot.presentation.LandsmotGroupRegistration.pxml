@@ -9,7 +9,7 @@
     <key>
       <name>component_type</name>
       <type>java.lang.String</type>
-      <value>iw.data</value>
+      <value>iw.block</value>
     </key>
   </map>
 </pxml>

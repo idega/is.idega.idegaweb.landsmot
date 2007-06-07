@@ -11,26 +11,26 @@
       <value>
         <map>
           <key>
-            <name>is.idega.idegaweb.landsmot.data.LandsmotEvent</name>
+            <name>is.idega.idegaweb.landsmot.presentation.LandsmotGroupRegistration</name>
             <value>
               <map>
                 <key>
                   <name>component_property_file</name>
                   <type>java.lang.String</type>
-                  <value>is.idega.idegaweb.landsmot.data.LandsmotEvent.pxml</value>
+                  <value>is.idega.idegaweb.landsmot.presentation.LandsmotGroupRegistration.pxml</value>
                 </key>
               </map>
             </value>
             <type>map</type>
           </key>
           <key>
-            <name>is.idega.idegaweb.landsmot.data.LandsmotGroupRegistration</name>
+            <name>is.idega.idegaweb.landsmot.presentation.LandsmotRegistration</name>
             <value>
               <map>
                 <key>
                   <name>component_property_file</name>
                   <type>java.lang.String</type>
-                  <value>is.idega.idegaweb.landsmot.data.LandsmotGroupRegistration.pxml</value>
+                  <value>is.idega.idegaweb.landsmot.presentation.LandsmotRegistration.pxml</value>
                 </key>
               </map>
             </value>
@@ -50,13 +50,26 @@
             <type>map</type>
           </key>
           <key>
-            <name>is.idega.idegaweb.landsmot.presentation.LandsmotRegistration</name>
+            <name>is.idega.idegaweb.landsmot.data.LandsmotGroupRegistration</name>
             <value>
               <map>
                 <key>
                   <name>component_property_file</name>
                   <type>java.lang.String</type>
-                  <value>is.idega.idegaweb.landsmot.presentation.LandsmotRegistration.pxml</value>
+                  <value>is.idega.idegaweb.landsmot.data.LandsmotGroupRegistration.pxml</value>
+                </key>
+              </map>
+            </value>
+            <type>map</type>
+          </key>
+          <key>
+            <name>is.idega.idegaweb.landsmot.data.LandsmotEvent</name>
+            <value>
+              <map>
+                <key>
+                  <name>component_property_file</name>
+                  <type>java.lang.String</type>
+                  <value>is.idega.idegaweb.landsmot.data.LandsmotEvent.pxml</value>
                 </key>
               </map>
             </value>
