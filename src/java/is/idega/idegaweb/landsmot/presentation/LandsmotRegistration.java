@@ -2,7 +2,7 @@ package is.idega.idegaweb.landsmot.presentation;
 
 import is.idega.idegaweb.landsmot.business.LandsmotBusiness;
 import is.idega.idegaweb.landsmot.business.LandsmotEventBusiness;
-import is.idega.idegaweb.landsmot.business.Runner;
+import is.idega.idegaweb.landsmot.business.EventParticipant;
 import is.idega.idegaweb.landsmot.data.LandsmotEvent;
 
 import java.rmi.RemoteException;
@@ -68,11 +68,11 @@ public class LandsmotRegistration extends Block {
 	public static final String SESSION_ATTRIBUTE_CARD_NUMBER = "sa_card_number";
 	public static final String SESSION_ATTRIBUTE_PAYMENT_DATE = "sa_payment_date";
 	
-	private static final String PARAMETER_ACTION = "prm_action";
+	protected static final String PARAMETER_ACTION = "prm_action";
 	private static final String PARAMETER_FROM_ACTION = "prm_from_action";
 	
-	private static final String PARAMETER_PERSONAL_ID = "prm_personal_id";
-	private static final String PARAMETER_NAME = "prm_name";
+	protected static final String PARAMETER_PERSONAL_ID = "prm_personal_id";
+	protected static final String PARAMETER_NAME = "prm_name";
 	private static final String PARAMETER_ADDRESS = "prm_address";
 	private static final String PARAMETER_POSTAL_CODE = "prm_postal_code";
 	private static final String PARAMETER_CITY = "prm_city";
@@ -82,8 +82,8 @@ public class LandsmotRegistration extends Block {
 	private static final String PARAMETER_EMAIL = "prm_email";
 	private static final String PARAMETER_HOME_PHONE = "prm_home_phone";
 	private static final String PARAMETER_MOBILE_PHONE = "prm_mobile_phone";
-	private static final String PARAMETER_AGREE = "prm_agree";
-	private static final String PARAMETER_EVENT = "prm_event";
+	protected static final String PARAMETER_AGREE = "prm_agree";
+	protected static final String PARAMETER_EVENT = "prm_event";
 	private static final String PARAMETER_NAME_ON_CARD = "prm_name_on_card";
 	private static final String PARAMETER_CARD_NUMBER = "prm_card_number";
 	private static final String PARAMETER_EXPIRES_MONTH = "prm_expires_month";
@@ -111,17 +111,17 @@ public class LandsmotRegistration extends Block {
 	public static final String RR_MOBILE = "run_reg.mobile";
 	public static final String RR_EMAIL = "run_reg.email";
 	
-	private static final int ACTION_STEP_ONE = 1;
-	private static final int ACTION_STEP_TWO = 2;
-	private static final int ACTION_STEP_FOUR = 4;
+	protected static final int ACTION_STEP_ONE = 1;
+	protected static final int ACTION_STEP_TWO = 2;
+	protected static final int ACTION_STEP_FOUR = 4;
 	private static final int ACTION_STEP_FIVE = 5;
 	private static final int ACTION_STEP_SIX = 6;
 	private static final int ACTION_SAVE = 7;
 	private static final int ACTION_CANCEL = 8;
 	
-	private Runner runner;
-	private IWResourceBundle iwrb = null;
-	private IWBundle iwb = null;
+	private EventParticipant runner;
+	protected IWResourceBundle iwrb = null;
+	protected IWBundle iwb = null;
 	public final static String IW_BUNDLE_IDENTIFIER = "is.idega.idegaweb.landsmot";
 	
 	public String getBundleIdentifier() {
@@ -158,7 +158,7 @@ public class LandsmotRegistration extends Block {
 		}
 	}
 	
-	private void stepOne(IWContext iwc) {
+	protected void stepOne(IWContext iwc) throws RemoteException{
 		Form form = new Form();
 		form.maintainParameter(PARAMETER_PERSONAL_ID);
 		form.addParameter(PARAMETER_ACTION, ACTION_STEP_TWO);
@@ -536,7 +536,7 @@ public class LandsmotRegistration extends Block {
 		
 		Iterator iter = runners.values().iterator();
 		while (iter.hasNext()) {
-			Runner runner = (Runner) iter.next();
+			EventParticipant runner = (EventParticipant) iter.next();
 			if (runner.getUser() != null) {
 				runnerTable.add(getText(runner.getUser().getName()), 1, runRow);
 			}
@@ -612,7 +612,7 @@ public class LandsmotRegistration extends Block {
 		float totalAmount = 0;
 		Iterator iter = runners.values().iterator();
 		while (iter.hasNext()) {
-			Runner runner = (Runner) iter.next();
+			EventParticipant runner = (EventParticipant) iter.next();
 			if (runner.getUser() != null) {
 				runnerTable.add(getText(runner.getUser().getName()), 1, runRow);
 			}
@@ -791,7 +791,7 @@ public class LandsmotRegistration extends Block {
 			String nameOnCard = null;
 			String cardNumber = null;
 			String hiddenCardNumber = "XXXX-XXXX-XXXX-XXXX";
-			String email = ((Runner) runners.iterator().next()).getEmail();
+			String email = ((EventParticipant) runners.iterator().next()).getEmail();
 			String expiresMonth = null;
 			String expiresYear = null;
 			String ccVerifyNumber = null;
@@ -921,12 +921,12 @@ public class LandsmotRegistration extends Block {
 		iwc.removeSessionAttribute(SESSION_ATTRIBUTE_RUNNER_MAP);
 	}
 
-	private Runner collectValues(IWContext iwc) throws FinderException, RemoteException {
+	protected EventParticipant collectValues(IWContext iwc) throws FinderException, RemoteException {
 		String personalID = iwc.getParameter(PARAMETER_PERSONAL_ID);
 		if (personalID != null && personalID.length() > 0) {
-			Runner runner = getRunner(iwc, personalID);
+			EventParticipant runner = getRunner(iwc, personalID);
 			if (runner == null) {
-				runner = new Runner();
+				runner = new EventParticipant();
 				runner.setPersonalID(personalID);
 				User user = getUserBusiness(iwc).getUser(personalID);
 				runner.setUser(user);
@@ -935,33 +935,8 @@ public class LandsmotRegistration extends Block {
 			if (iwc.isParameterSet(PARAMETER_NAME)) {
 				runner.setName(iwc.getParameter(PARAMETER_NAME));
 			}
-			if (iwc.isParameterSet(PARAMETER_ADDRESS)) {
-				runner.setAddress(iwc.getParameter(PARAMETER_ADDRESS));
-			}
-			if (iwc.isParameterSet(PARAMETER_POSTAL_CODE)) {
-				runner.setPostalCode(iwc.getParameter(PARAMETER_POSTAL_CODE));
-			}
-			if (iwc.isParameterSet(PARAMETER_CITY)) {
-				runner.setCity(iwc.getParameter(PARAMETER_CITY));
-			}
-			if (iwc.isParameterSet(PARAMETER_COUNTRY)) {
-				runner.setCountry(getUserBusiness(iwc).getAddressBusiness().getCountryHome().findByPrimaryKey(new Integer(iwc.getParameter(PARAMETER_COUNTRY))));
-			}
-			if (iwc.isParameterSet(PARAMETER_GENDER)) {
-				runner.setGender(getGenderBusiness(iwc).getGender(new Integer(iwc.getParameter(PARAMETER_GENDER))));
-			}
-			if (iwc.isParameterSet(PARAMETER_NATIONALITY)) {
-				runner.setNationality(getUserBusiness(iwc).getAddressBusiness().getCountryHome().findByPrimaryKey(new Integer(iwc.getParameter(PARAMETER_NATIONALITY))));
-			}
-			if (iwc.isParameterSet(PARAMETER_EMAIL)) {
-				runner.setEmail(iwc.getParameter(PARAMETER_EMAIL));
-			}
-			if (iwc.isParameterSet(PARAMETER_HOME_PHONE)) {
-				runner.setHomePhone(iwc.getParameter(PARAMETER_HOME_PHONE));
-			}
-			if (iwc.isParameterSet(PARAMETER_MOBILE_PHONE)) {
-				runner.setMobilePhone(iwc.getParameter(PARAMETER_MOBILE_PHONE));
-			}
+			collectContactValues(iwc, runner);
+
 			if (iwc.isParameterSet(PARAMETER_AGREE)) {
 				runner.setAgree(true);
 			}
@@ -972,11 +947,44 @@ public class LandsmotRegistration extends Block {
 					runner.addEvent(ev);
 				}
 			}
+			
+			runner.setGroup(false);
 
 			addRunner(iwc, personalID, runner);
 			return runner;
 		}
-		return new Runner();
+		return new EventParticipant();
+	}
+
+	protected void collectContactValues(IWContext iwc, EventParticipant runner)
+			throws FinderException, RemoteException {
+		if (iwc.isParameterSet(PARAMETER_ADDRESS)) {
+			runner.setAddress(iwc.getParameter(PARAMETER_ADDRESS));
+		}
+		if (iwc.isParameterSet(PARAMETER_POSTAL_CODE)) {
+			runner.setPostalCode(iwc.getParameter(PARAMETER_POSTAL_CODE));
+		}
+		if (iwc.isParameterSet(PARAMETER_CITY)) {
+			runner.setCity(iwc.getParameter(PARAMETER_CITY));
+		}
+		if (iwc.isParameterSet(PARAMETER_COUNTRY)) {
+			runner.setCountry(getUserBusiness(iwc).getAddressBusiness().getCountryHome().findByPrimaryKey(new Integer(iwc.getParameter(PARAMETER_COUNTRY))));
+		}
+		if (iwc.isParameterSet(PARAMETER_GENDER)) {
+			runner.setGender(getGenderBusiness(iwc).getGender(new Integer(iwc.getParameter(PARAMETER_GENDER))));
+		}
+		if (iwc.isParameterSet(PARAMETER_NATIONALITY)) {
+			runner.setNationality(getUserBusiness(iwc).getAddressBusiness().getCountryHome().findByPrimaryKey(new Integer(iwc.getParameter(PARAMETER_NATIONALITY))));
+		}
+		if (iwc.isParameterSet(PARAMETER_EMAIL)) {
+			runner.setEmail(iwc.getParameter(PARAMETER_EMAIL));
+		}
+		if (iwc.isParameterSet(PARAMETER_HOME_PHONE)) {
+			runner.setHomePhone(iwc.getParameter(PARAMETER_HOME_PHONE));
+		}
+		if (iwc.isParameterSet(PARAMETER_MOBILE_PHONE)) {
+			runner.setMobilePhone(iwc.getParameter(PARAMETER_MOBILE_PHONE));
+		}
 	}
 	
 	private int parseAction(IWContext iwc) throws RemoteException {
@@ -996,15 +1004,15 @@ public class LandsmotRegistration extends Block {
 		return action;
 	}
 	
-	private Runner getRunner(IWContext iwc, String key) {
+	protected EventParticipant getRunner(IWContext iwc, String key) {
 		Map runnerMap = (Map) iwc.getSessionAttribute(SESSION_ATTRIBUTE_RUNNER_MAP);
 		if (runnerMap != null) {
-			return (Runner) runnerMap.get(key);
+			return (EventParticipant) runnerMap.get(key);
 		}
 		return null;
 	}
 	
-	private void addRunner(IWContext iwc, String key, Runner runner) {
+	protected void addRunner(IWContext iwc, String key, EventParticipant runner) {
 		Map runnerMap = (Map) iwc.getSessionAttribute(SESSION_ATTRIBUTE_RUNNER_MAP);
 		if (runnerMap == null) {
 			runnerMap = new HashMap();
