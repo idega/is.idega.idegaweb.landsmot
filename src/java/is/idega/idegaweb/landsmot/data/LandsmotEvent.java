@@ -56,6 +56,26 @@ public interface LandsmotEvent extends IDOEntity {
 	public boolean getGroups();
 
 	/**
+	 * @see is.idega.idegaweb.landsmot.data.LandsmotEventBMPBean#getMinSize
+	 */
+	public int getMinSize();
+
+	/**
+	 * @see is.idega.idegaweb.landsmot.data.LandsmotEventBMPBean#setMinSize
+	 */
+	public void setMinSize(int min);
+
+	/**
+	 * @see is.idega.idegaweb.landsmot.data.LandsmotEventBMPBean#getMaxSize
+	 */
+	public int getMaxSize();
+
+	/**
+	 * @see is.idega.idegaweb.landsmot.data.LandsmotEventBMPBean#setMaxSize
+	 */
+	public void setMaxSize(int max);
+
+	/**
 	 * @see is.idega.idegaweb.landsmot.data.LandsmotEventBMPBean#setPrice
 	 */
 	public void setPrice(float price);

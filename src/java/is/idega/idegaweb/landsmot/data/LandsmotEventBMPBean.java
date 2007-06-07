@@ -20,6 +20,7 @@ public class LandsmotEventBMPBean extends GenericEntity implements LandsmotEvent
 	private static final String COLUMN_END_DATE = "END_DATE";
 	private static final String COLUMN_GROUPS = "GROUPS";
 	private static final String COLUMN_GROUP_SIZE = "GROUP_SIZE";
+	private static final String COLUMN_GROUP_SIZE_MAX = "GROUP_SIZE_MAX";
 	private static final String COLUMN_PRICE = "PRICE";
 	private static final String COLUMN_CURRENCY = "CURRENCY";
 	
@@ -36,6 +37,7 @@ public class LandsmotEventBMPBean extends GenericEntity implements LandsmotEvent
 		addAttribute(COLUMN_END_DATE, "End date", Timestamp.class);
 		addAttribute(COLUMN_GROUPS, "Groups", Boolean.class);
 		addAttribute(COLUMN_GROUP_SIZE, "GroupSize", Integer.class);
+		addAttribute(COLUMN_GROUP_SIZE_MAX, "GroupSize Max", Integer.class);
 		addAttribute(COLUMN_PRICE, "Price", Float.class);
 		addAttribute(COLUMN_CURRENCY, "Currency", String.class);
 	}
@@ -78,6 +80,22 @@ public class LandsmotEventBMPBean extends GenericEntity implements LandsmotEvent
 	
 	public boolean getGroups() {
 		return getBooleanColumnValue(COLUMN_GROUPS);
+	}
+	
+	public int getMinSize() {
+		return getIntColumnValue(COLUMN_GROUP_SIZE);
+	}
+	
+	public void setMinSize(int min) {
+		setColumn(COLUMN_GROUP_SIZE, min);
+	}
+	
+	public int getMaxSize() {
+		return getIntColumnValue(COLUMN_GROUP_SIZE_MAX);
+	}
+	
+	public void setMaxSize(int max) {
+		setColumn(COLUMN_GROUP_SIZE_MAX, max);
 	}
 	
 	public void setPrice(float price) {
