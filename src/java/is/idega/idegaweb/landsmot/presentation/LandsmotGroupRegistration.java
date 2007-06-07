@@ -29,9 +29,9 @@ public class LandsmotGroupRegistration extends LandsmotRegistration {
 		super.getParentPage().addStyleSheetURL(iwb.getResourcesVirtualPath()+"/style/registration.css");
 	}
 	
-	protected void stepOne(IWContext iwc) throws RemoteException {
+	protected void stepPersonLookup(IWContext iwc) throws RemoteException {
 		Form form = new Form();
-		form.addParameter(PARAMETER_ACTION, ACTION_STEP_FOUR);
+		form.addParameter(PARAMETER_ACTION, ACTION_STEP_CONCENT);
 		
 		Table table = new Table();
 		table.setId("landsmot_registration");
@@ -63,7 +63,7 @@ public class LandsmotGroupRegistration extends LandsmotRegistration {
 
 		DropdownMenu menu = new DropdownMenu(PARAMETER_EVENT);
 		Collection events = getEventBusiness(iwc).getAllGroupEvents();
-		menu.setValueOnChange(PARAMETER_ACTION, String.valueOf(ACTION_STEP_ONE));
+		menu.setValueOnChange(PARAMETER_ACTION, String.valueOf(ACTION_STEP_PERSON_LOOKUP));
 		menu.setToSubmit(true);
 		if (events != null && !events.isEmpty()) {
 			menu.addMenuElement("-1", localize(localization_prefix+".select_an_event", "Select an event"));

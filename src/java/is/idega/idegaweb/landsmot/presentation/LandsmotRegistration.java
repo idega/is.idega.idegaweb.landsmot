@@ -78,7 +78,6 @@ public class LandsmotRegistration extends Block {
 	private static final String PARAMETER_CITY = "prm_city";
 	private static final String PARAMETER_COUNTRY = "prm_country";
 	private static final String PARAMETER_GENDER = "prm_gender";
-	private static final String PARAMETER_NATIONALITY = "prm_nationality";
 	private static final String PARAMETER_EMAIL = "prm_email";
 	private static final String PARAMETER_HOME_PHONE = "prm_home_phone";
 	private static final String PARAMETER_MOBILE_PHONE = "prm_mobile_phone";
@@ -94,15 +93,9 @@ public class LandsmotRegistration extends Block {
 	private static final String PARAMETER_REFERENCE_NUMBER = "prm_reference_number";
 	
 	//localized strings
-	public static final String RR_INFO_RED_STAR = "run_reg.info_red_star";
-	public static final String RR_PRIMARY_DD = "run_reg.primary_dd_lable";
-	public static final String RR_SECONDARY_DD = "run_reg.secondary_dd_label";
 	public static final String RR_NAME = "run_reg.name";
-	public static final String RR_NATIONALITY = "run_reg.nationality";
 	public static final String RR_SSN = "run_reg.ssn";
 	public static final String RR_GENDER = "run_reg.gender";
-	public static final String RR_FEMALE = "run_reg.female";
-	public static final String RR_MALE = "run_reg.male";
 	public static final String RR_ADDRESS = "run_reg.address";
 	public static final String RR_POSTAL = "run_reg.postal";
 	public static final String RR_CITY = "run_reg.city";
@@ -111,13 +104,12 @@ public class LandsmotRegistration extends Block {
 	public static final String RR_MOBILE = "run_reg.mobile";
 	public static final String RR_EMAIL = "run_reg.email";
 	
-	protected static final int ACTION_STEP_ONE = 1;
-	protected static final int ACTION_STEP_TWO = 2;
-	protected static final int ACTION_STEP_FOUR = 4;
-	private static final int ACTION_STEP_FIVE = 5;
-	private static final int ACTION_STEP_SIX = 6;
-	private static final int ACTION_SAVE = 7;
-	private static final int ACTION_CANCEL = 8;
+	protected static final int ACTION_STEP_PERSON_LOOKUP = 1;
+	protected static final int ACTION_STEP_REGISTER_FOR_EVENT = 2;
+	protected static final int ACTION_STEP_CONCENT = 3;
+	private static final int ACTION_STEP_PAYMENT = 4;
+	private static final int ACTION_SAVE = 5;
+	private static final int ACTION_CANCEL = 6;
 	
 	private EventParticipant runner;
 	protected IWResourceBundle iwrb = null;
@@ -134,20 +126,17 @@ public class LandsmotRegistration extends Block {
 		iwrb = iwb.getResourceBundle(iwc);
 		
 		switch (parseAction(iwc)) {
-			case ACTION_STEP_ONE:
-				stepOne(iwc);
+			case ACTION_STEP_PERSON_LOOKUP:
+				stepPersonLookup(iwc);
 				break;
-			case ACTION_STEP_TWO:
-				stepTwo(iwc);
+			case ACTION_STEP_REGISTER_FOR_EVENT:
+				stepRegisterForEvent(iwc);
 				break;
-			case ACTION_STEP_FOUR:
-				stepFour(iwc);
+			case ACTION_STEP_CONCENT:
+				stepConcent(iwc);
 				break;
-			case ACTION_STEP_FIVE:
-				stepFive(iwc);
-				break;
-			case ACTION_STEP_SIX:
-				stepSix(iwc);
+			case ACTION_STEP_PAYMENT:
+				stepPayment(iwc);
 				break;
 			case ACTION_SAVE:
 				save(iwc, true);
@@ -158,10 +147,10 @@ public class LandsmotRegistration extends Block {
 		}
 	}
 	
-	protected void stepOne(IWContext iwc) throws RemoteException{
+	protected void stepPersonLookup(IWContext iwc) throws RemoteException {
 		Form form = new Form();
 		form.maintainParameter(PARAMETER_PERSONAL_ID);
-		form.addParameter(PARAMETER_ACTION, ACTION_STEP_TWO);
+		form.addParameter(PARAMETER_ACTION, ACTION_STEP_REGISTER_FOR_EVENT);
 		
 		Table table = new Table();
 		table.setCellpadding(0);
@@ -170,7 +159,7 @@ public class LandsmotRegistration extends Block {
 		form.add(table);
 		int row = 1;
 
-		table.add(getPhasesTable(1, 7, "run_reg.registration", "Registration"), 1, row++);
+		table.add(getPhasesTable(1, 5, "run_reg.registration", "Registration"), 1, row++);
 		table.setHeight(row++, 12);
 
 		table.add(getInformationTable(localize("run_reg.information_text_step_1", "Information text 1...")), 1, row++);
@@ -195,11 +184,11 @@ public class LandsmotRegistration extends Block {
 		add(form);
 	}
 
-	private void stepTwo(IWContext iwc) throws RemoteException {
+	private void stepRegisterForEvent(IWContext iwc) throws RemoteException {
 		Form form = new Form();
 		form.maintainParameter(PARAMETER_PERSONAL_ID);
 		form.addParameter(PARAMETER_ACTION, "-1");
-		form.addParameter(PARAMETER_FROM_ACTION, ACTION_STEP_TWO);
+		form.addParameter(PARAMETER_FROM_ACTION, ACTION_STEP_REGISTER_FOR_EVENT);
 		
 		Table table = new Table();
 		table.setCellpadding(0);
@@ -208,7 +197,7 @@ public class LandsmotRegistration extends Block {
 		form.add(table);
 		int row = 1;
 
-		table.add(getPhasesTable(2, 7, "run_reg.registration", "Registration"), 1, row++);
+		table.add(getPhasesTable(2, 5, "run_reg.registration", "Registration"), 1, row++);
 		table.setHeight(row++, 12);
 
 		table.add(getInformationTable(localize("run_reg.information_text_step_2", "Information text 2...")), 1, row++);
@@ -226,7 +215,7 @@ public class LandsmotRegistration extends Block {
 		int iRow = 1;
 
 		SelectionBox eventSelect = new SelectionBox(PARAMETER_EVENT);
-		eventSelect.setAsNotEmpty(localize("you_must_select_at_lease_one_event", "You must selecte at least one event"));
+		eventSelect.setAsNotEmpty(localize("run_reg.you_must_select_at_least_one_event", "You must selecte at least one event"));
 		Collection events = getEventBusiness(iwc).getAllSingleEvents();
 		if (events != null) {
 			eventSelect.addMenuElements(events);
@@ -234,7 +223,7 @@ public class LandsmotRegistration extends Block {
 		Text redStar = getHeader("*");
 		redStar.setFontColor("#ff0000");
 
-		choiceTable.add(getHeader(localize(RR_PRIMARY_DD, "Run") + "/" + localize(RR_SECONDARY_DD, "Distance")), 1, iRow);
+		choiceTable.add(getHeader(localize("run_reg.event", "Event")), 1, iRow);
 		choiceTable.add(redStar, 1, iRow++);
 		choiceTable.mergeCells(1, iRow, choiceTable.getColumns(), iRow);
 		choiceTable.add(eventSelect, 1, iRow);
@@ -300,40 +289,28 @@ public class LandsmotRegistration extends Block {
 		}
 
 		Collection countries = getRunBusiness(iwc).getCountries();
-		DropdownMenu nationalityField = (DropdownMenu) getStyledInterface(new DropdownMenu(PARAMETER_NATIONALITY));
 		DropdownMenu countryField = (DropdownMenu) getStyledInterface(new DropdownMenu(PARAMETER_COUNTRY));
-		nationalityField.addMenuElement("-1", localize("run_reg.select_nationality", "Select nationality..."));
 		countryField.addMenuElement("-1", localize("run_reg.select_country", "Select country..."));
 		SelectorUtility util = new SelectorUtility();
 		if (countries != null && !countries.isEmpty()) {
-			nationalityField = (DropdownMenu) util.getSelectorFromIDOEntities(nationalityField, countries, "getName");
 			countryField = (DropdownMenu) util.getSelectorFromIDOEntities(countryField, countries, "getName");
 		}
 		countryField.setDisabled(true);
-		nationalityField.setSelectedElement("104");
 		if (this.runner.getUser() != null) {
 			Address address = getUserBusiness(iwc).getUsersMainAddress(this.runner.getUser());
 			if (address != null && address.getCountry() != null) {
 				countryField.setSelectedElement(address.getCountry().getPrimaryKey().toString());
 			}
 		}
-		nationalityField.setWidth(Table.HUNDRED_PERCENT);
-		nationalityField.setAsNotEmpty(localize("run_reg.must_select_nationality", "You must select your nationality"));
 		countryField.setWidth(Table.HUNDRED_PERCENT);
 
 		if (this.runner.getCountry() != null) {
 			countryField.setSelectedElement(this.runner.getCountry().getPrimaryKey().toString());
 		}
-		if (this.runner.getNationality() != null) {
-			nationalityField.setSelectedElement(this.runner.getNationality().getPrimaryKey().toString());
-		}
 		
 		choiceTable.add(getHeader(localize(RR_SSN, "SSN")), 1, iRow);
 		choiceTable.add(redStar, 1, iRow);
-		choiceTable.add(getHeader(localize(RR_NATIONALITY, "Nationality")), 3, iRow);
-		choiceTable.add(redStar, 3, iRow++);
 		choiceTable.add(ssnISField, 1, iRow);
-		choiceTable.add(nationalityField, 3, iRow++);
 		choiceTable.setHeight(iRow++, 3);
 		
 		TextInput addressField = (TextInput) getStyledInterface(new TextInput(PARAMETER_ADDRESS));
@@ -455,7 +432,7 @@ public class LandsmotRegistration extends Block {
 
 
 		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("next", "Next")));
-		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_FOUR));
+		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_CONCENT));
 		
 		table.setHeight(row++, 18);
 		table.add(next, 1, row);
@@ -463,11 +440,11 @@ public class LandsmotRegistration extends Block {
 		add(form);
 	}
 
-	private void stepFour(IWContext iwc) {
+	private void stepConcent(IWContext iwc) {
 		Form form = new Form();
 		form.maintainParameter(PARAMETER_PERSONAL_ID);
 		form.addParameter(PARAMETER_ACTION, "-1");
-		form.addParameter(PARAMETER_FROM_ACTION, ACTION_STEP_FOUR);
+		form.addParameter(PARAMETER_FROM_ACTION, ACTION_STEP_CONCENT);
 		
 		Table table = new Table();
 		table.setCellpadding(0);
@@ -476,11 +453,11 @@ public class LandsmotRegistration extends Block {
 		form.add(table);
 		int row = 1;
 
-		table.add(getPhasesTable(4, 6, "run_reg.consent", "Consent"), 1, row++);
+		table.add(getPhasesTable(4, 5, "run_reg.consent", "Consent"), 1, row++);
 		table.setHeight(row++, 18);
 
 		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("next", "Next")));
-		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_FIVE));
+		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_PAYMENT));
 		if (!this.runner.isAgree()) {
 			next.setDisabled(true);
 		}
@@ -490,14 +467,14 @@ public class LandsmotRegistration extends Block {
 		agree.setToDisableWhenUnchecked(next);
 		agree.setChecked(this.runner.isAgree());
 		
-		table.add(getText(localize("run_reg.information_text_step_4", "Information text 4...")), 1, row++);
+		table.add(getText(localize("run_reg.information_text_step_3", "Information text 3...")), 1, row++);
 		table.setHeight(row++, 6);
 		table.add(agree, 1, row);
 		table.add(Text.getNonBrakingSpace(), 1, row);
 		table.add(getHeader(localize("run_reg.agree_terms", "Yes, I agree")), 1, row++);
 		
 		SubmitButton previous = (SubmitButton) getButton(new SubmitButton(localize("previous", "Previous")));
-		previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_TWO));
+		previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_REGISTER_FOR_EVENT));
 
 		table.setHeight(row++, 18);
 		table.add(previous, 1, row);
@@ -508,77 +485,7 @@ public class LandsmotRegistration extends Block {
 		add(form);
 	}
 
-	private void stepFive(IWContext iwc) {
-		Form form = new Form();
-		form.maintainParameter(PARAMETER_PERSONAL_ID);
-		form.addParameter(PARAMETER_ACTION, "-1");
-		
-		Table table = new Table();
-		table.setCellpadding(0);
-		table.setCellspacing(0);
-		table.setWidth(Table.HUNDRED_PERCENT);
-		form.add(table);
-		int row = 1;
-
-		table.add(getPhasesTable(5, 6, "run_reg.overview", "Overview"), 1, row++);
-		table.setHeight(row++, 12);
-
-		table.add(getInformationTable(localize("run_reg.information_text_step_5", "Information text 5...")), 1, row++);
-		table.setHeight(row++, 18);
-		
-		Map runners = (Map) iwc.getSessionAttribute(SESSION_ATTRIBUTE_RUNNER_MAP);
-		Table runnerTable = new Table();
-		runnerTable.setWidth(Table.HUNDRED_PERCENT);
-		runnerTable.add(getHeader(localize("run_reg.name", "Name")), 1, 1);
-		runnerTable.add(getHeader(localize("run_reg.event", "Event")), 2, 1);
-		table.add(runnerTable, 1, row++);
-		int runRow = 2;
-		
-		Iterator iter = runners.values().iterator();
-		while (iter.hasNext()) {
-			EventParticipant runner = (EventParticipant) iter.next();
-			if (runner.getUser() != null) {
-				runnerTable.add(getText(runner.getUser().getName()), 1, runRow);
-			}
-			else {
-				runnerTable.add(getText(runner.getName()), 1, runRow);
-			}
-			Collection evs = runner.getEvents();
-			Iterator eter = evs.iterator();
-			while (eter.hasNext()) {
-				LandsmotEvent ev =  (LandsmotEvent) eter.next();
-				runnerTable.add(ev.getName(), 2, runRow++);
-			}
-		}
-		
-		//if (runner.getRun() != null) {
-		//	runnerTable.add(getText(localize(runner.getRun().getName(), runner.getRun().getName())), 2, runRow);
-		//	runnerTable.add(getText(localize(runner.getDistance().getName(), runner.getDistance().getName())), 3, runRow++);
-		//}
-		//else {
-//			removeRunner(iwc, runner.getPersonalID());
-		//}
-		
-		SubmitButton previous = (SubmitButton) getButton(new SubmitButton(localize("previous", "Previous")));
-		previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_FOUR));
-		SubmitButton registerOther = (SubmitButton) getButton(new SubmitButton(localize("run_reg.register_other", "Register other")));
-		registerOther.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_ONE));
-		registerOther.setValueOnClick(PARAMETER_PERSONAL_ID, "");
-		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("run_reg.pay", "Pay")));
-		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_SIX));
-
-		table.setHeight(row++, 18);
-		table.add(previous, 1, row);
-		table.add(Text.getNonBrakingSpace(), 1, row);
-		table.add(registerOther, 1, row);
-		table.add(Text.getNonBrakingSpace(), 1, row);
-		table.add(next, 1, row);
-		table.setAlignment(1, row, Table.HORIZONTAL_ALIGN_RIGHT);
-
-		add(form);
-	}
-
-	private void stepSix(IWContext iwc) throws RemoteException {
+	private void stepPayment(IWContext iwc) throws RemoteException {
 		Form form = new Form();
 		form.maintainParameter(PARAMETER_PERSONAL_ID);
 		form.addParameter(PARAMETER_ACTION, "-1");
@@ -592,10 +499,10 @@ public class LandsmotRegistration extends Block {
 		DecimalFormatSymbols symbs = new DecimalFormatSymbols(iwc.getLocale());
 		NumberFormat nf = new DecimalFormat("#,###", symbs);
 
-		table.add(getPhasesTable(6, 6, "run_reg.payment_info", "Payment info"), 1, row++);
+		table.add(getPhasesTable(4, 5, "run_reg.payment_info", "Payment info"), 1, row++);
 		table.setHeight(row++, 12);
 
-		table.add(getInformationTable(localize("run_reg.information_text_step_6", "Information text 6...")), 1, row++);
+		table.add(getInformationTable(localize("run_reg.information_text_step_4", "Information text 4...")), 1, row++);
 		table.setHeight(row++, 18);
 		
 		Map runners = (Map) iwc.getSessionAttribute(SESSION_ATTRIBUTE_RUNNER_MAP);
@@ -629,22 +536,13 @@ public class LandsmotRegistration extends Block {
 				totalAmount += price;
 				runnerTable.add(getText(nf.format(price)), 3, runRow++);
 			}
-			
-		
-
-			
 			addRunner(iwc, runner.getPersonalID(), runner);
-			
 		}
 		
 		if (totalAmount == 0) {
 			save(iwc, false);
 			return;
 		}
-		
-		
-		
-		
 		
 		runnerTable.setHeight(runRow++, 12);
 		runnerTable.add(getHeader(localize("run_reg.total_amount", "Total amount")), 1, runRow);
@@ -773,7 +671,7 @@ public class LandsmotRegistration extends Block {
 		creditCardTable.add(getHeader(localize("run_reg.agree_terms_and_conditions", "I agree to the terms and conditions")), 1, creditRow++);
 
 		SubmitButton previous = (SubmitButton) getButton(new SubmitButton(localize("previous", "Previous")));
-		previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_FIVE));
+		previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_CONCENT));
 		table.setHeight(row++, 18);
 		table.add(previous, 1, row);
 		table.add(Text.getNonBrakingSpace(), 1, row);
@@ -799,8 +697,7 @@ public class LandsmotRegistration extends Block {
 			double amount = 0;
 			IWTimestamp paymentStamp = new IWTimestamp();
 
-			IWBundle iwb = getBundle(iwc);
-			boolean disablePaymentProcess = "true".equalsIgnoreCase(iwb.getProperty("disable_payment_authorization_process","false"));
+			boolean disablePaymentProcess = "true".equalsIgnoreCase(iwc.getApplicationSettings().getProperty("LANDSMOT_DISABLE_PAYMENT_AUTH","false"));
 			if (doPayment && disablePaymentProcess) {
 				doPayment = false;
 			}
@@ -838,13 +735,13 @@ public class LandsmotRegistration extends Block {
 		catch (IDOCreateException ice) {
 			getParentPage().setAlertOnLoad(localize("run_reg.save_failed", "There was an error when trying to finish registration.  Please contact the Landsmot's office."));
 			ice.printStackTrace();
-			stepSix(iwc);
+			stepPayment(iwc);
 		}
 		catch (CreditCardAuthorizationException ccae) {
 			IWResourceBundle creditCardBundle = iwc.getIWMainApplication().getBundle("com.idega.block.creditcard").getResourceBundle(iwc.getCurrentLocale());
 			getParentPage().setAlertOnLoad(ccae.getLocalizedMessage(creditCardBundle));
 			ccae.printStackTrace();
-			stepSix(iwc);
+			stepPayment(iwc);
 		}
 	}
 	
@@ -859,7 +756,7 @@ public class LandsmotRegistration extends Block {
 		iwc.setSessionAttribute(SESSION_ATTRIBUTE_CARD_NUMBER, cardNumber);
 		iwc.setSessionAttribute(SESSION_ATTRIBUTE_PAYMENT_DATE, paymentStamp);
 
-		table.add(getPhasesTable(7, 7, "run_reg.receipt", "Receipt"), 1, row++);
+		table.add(getPhasesTable(5, 5, "run_reg.receipt", "Receipt"), 1, row++);
 		table.setHeight(row++, 18);
 		
 		table.add(getHeader(localize("run_reg.hello_participant", "Hello participant(s)")), 1, row++);
@@ -973,9 +870,6 @@ public class LandsmotRegistration extends Block {
 		if (iwc.isParameterSet(PARAMETER_GENDER)) {
 			runner.setGender(getGenderBusiness(iwc).getGender(new Integer(iwc.getParameter(PARAMETER_GENDER))));
 		}
-		if (iwc.isParameterSet(PARAMETER_NATIONALITY)) {
-			runner.setNationality(getUserBusiness(iwc).getAddressBusiness().getCountryHome().findByPrimaryKey(new Integer(iwc.getParameter(PARAMETER_NATIONALITY))));
-		}
 		if (iwc.isParameterSet(PARAMETER_EMAIL)) {
 			runner.setEmail(iwc.getParameter(PARAMETER_EMAIL));
 		}
@@ -988,7 +882,7 @@ public class LandsmotRegistration extends Block {
 	}
 	
 	private int parseAction(IWContext iwc) throws RemoteException {
-		int action = ACTION_STEP_ONE;
+		int action = ACTION_STEP_PERSON_LOOKUP;
 		
 		if (iwc.isParameterSet(PARAMETER_ACTION)) {
 			action = Integer.parseInt(iwc.getParameter(PARAMETER_ACTION));
@@ -999,7 +893,7 @@ public class LandsmotRegistration extends Block {
 		}
 		catch (FinderException fe) {
 			getParentPage().setAlertOnLoad(localize("run_reg.user_not_found_for_personal_id", "No user found with personal ID."));
-			action = ACTION_STEP_ONE;
+			action = ACTION_STEP_PERSON_LOOKUP;
 		}
 		return action;
 	}
