@@ -203,17 +203,6 @@ public class LandsmotRegistration extends Block {
 		table.add(getInformationTable(localize("run_reg.information_text_step_2", "Information text 2...")), 1, row++);
 		table.setHeight(row++, 18);
 		
-		Table choiceTable = new Table();
-		choiceTable.setColumns(3);
-		choiceTable.setCellpadding(2);
-		choiceTable.setCellspacing(0);
-		choiceTable.setWidth(1, "50%");
-		choiceTable.setWidth(2, 12);
-		choiceTable.setWidth(3, "50%");
-		choiceTable.setWidth(Table.HUNDRED_PERCENT);
-		table.add(choiceTable, 1, row++);
-		int iRow = 1;
-
 		SelectionBox eventSelect = new SelectionBox(PARAMETER_EVENT);
 		eventSelect.setAsNotEmpty(localize("run_reg.you_must_select_at_least_one_event", "You must selecte at least one event"));
 		Collection events = getEventBusiness(iwc).getAllSingleEvents();
@@ -222,12 +211,6 @@ public class LandsmotRegistration extends Block {
 		}
 		Text redStar = getHeader("*");
 		redStar.setFontColor("#ff0000");
-
-		choiceTable.add(getHeader(localize("run_reg.event", "Event")), 1, iRow);
-		choiceTable.add(redStar, 1, iRow++);
-		choiceTable.mergeCells(1, iRow, choiceTable.getColumns(), iRow);
-		choiceTable.add(eventSelect, 1, iRow);
-		choiceTable.setHeight(iRow++, 12);
 		
 		TextInput nameField = (TextInput) getStyledInterface(new TextInput(PARAMETER_NAME));
 		nameField.setWidth(Table.HUNDRED_PERCENT);
@@ -238,7 +221,6 @@ public class LandsmotRegistration extends Block {
 		if (this.runner.getUser() != null) {
 			nameField.setContent(this.runner.getUser().getName());
 		}
-
 
 		DropdownMenu genderField = (DropdownMenu) getStyledInterface(new DropdownMenu(PARAMETER_GENDER));
 		Collection genders = getGenderBusiness(iwc).getAllGenders();
@@ -259,15 +241,6 @@ public class LandsmotRegistration extends Block {
 			genderField.setSelectedElement(this.runner.getUser().getGenderID());
 		}
 		
-
-		choiceTable.add(getHeader(localize(RR_NAME, "Name")), 1, iRow);
-		choiceTable.add(redStar, 1, iRow);
-		choiceTable.add(getHeader(localize(RR_GENDER, "Gender")), 3, iRow);
-		choiceTable.add(redStar, 3, iRow++);
-		choiceTable.add(nameField, 1, iRow);
-		choiceTable.add(genderField, 3, iRow++);
-		choiceTable.setHeight(iRow++, 3);
-
 		TextInput ssnISField = (TextInput) getStyledInterface(new TextInput(PARAMETER_PERSONAL_ID));
 		ssnISField.setLength(10);
 		
@@ -276,18 +249,6 @@ public class LandsmotRegistration extends Block {
 			ssnISField.setContent(this.runner.getUser().getPersonalID());
 		}
 		
-		IWTimestamp stampNow = new IWTimestamp();
-		stampNow.addYears(-3);
-
-		IWTimestamp birthStamp = new IWTimestamp();
-		DateInput ssnField = (DateInput) getStyledInterface(new DateInput(PARAMETER_PERSONAL_ID));
-		ssnField.setAsNotEmpty("Date of birth can not be empty");
-		ssnField.setYearRange(birthStamp.getYear(), birthStamp.getYear() - 100);
-		ssnField.setLatestPossibleDate(stampNow.getDate(), "Invalid date of birth.  Please check the date you have selected and try again");
-		if (this.runner.getDateOfBirth() != null) {
-			ssnField.setDate(this.runner.getDateOfBirth());
-		}
-
 		Collection countries = getRunBusiness(iwc).getCountries();
 		DropdownMenu countryField = (DropdownMenu) getStyledInterface(new DropdownMenu(PARAMETER_COUNTRY));
 		countryField.addMenuElement("-1", localize("run_reg.select_country", "Select country..."));
@@ -307,11 +268,6 @@ public class LandsmotRegistration extends Block {
 		if (this.runner.getCountry() != null) {
 			countryField.setSelectedElement(this.runner.getCountry().getPrimaryKey().toString());
 		}
-		
-		choiceTable.add(getHeader(localize(RR_SSN, "SSN")), 1, iRow);
-		choiceTable.add(redStar, 1, iRow);
-		choiceTable.add(ssnISField, 1, iRow);
-		choiceTable.setHeight(iRow++, 3);
 		
 		TextInput addressField = (TextInput) getStyledInterface(new TextInput(PARAMETER_ADDRESS));
 		addressField.setWidth(Table.HUNDRED_PERCENT);
@@ -342,13 +298,6 @@ public class LandsmotRegistration extends Block {
 				//No email registered...
 			}
 		}
-		
-		choiceTable.add(getHeader(localize(RR_ADDRESS, "Address")), 1, iRow);
-		choiceTable.add(redStar, 1, iRow);
-		choiceTable.add(getHeader(localize(RR_EMAIL, "Email")), 3, iRow++);
-		choiceTable.add(addressField, 1, iRow);
-		choiceTable.add(emailField, 3, iRow++);
-		choiceTable.setHeight(iRow++, 3);
 
 		TextInput cityField = (TextInput) getStyledInterface(new TextInput(PARAMETER_CITY));
 		cityField.setWidth(Table.HUNDRED_PERCENT);
@@ -378,14 +327,7 @@ public class LandsmotRegistration extends Block {
 				//No phone registered...
 			}
 		}
-
-		choiceTable.add(getHeader(localize(RR_CITY, "City")), 1, iRow);
-		choiceTable.add(redStar, 1, iRow);
-		choiceTable.add(getHeader(localize(RR_TEL, "Telephone")), 3, iRow++);
-		choiceTable.add(cityField, 1, iRow);
-		choiceTable.add(telField, 3, iRow++);
-		choiceTable.setHeight(iRow++, 3);
-
+		
 		TextInput postalField = (TextInput) getStyledInterface(new TextInput(PARAMETER_POSTAL_CODE));
 		postalField.setMaxlength(10);
 		postalField.setLength(10);
@@ -419,17 +361,52 @@ public class LandsmotRegistration extends Block {
 			}
 		}
 
+		Table choiceTable = new Table();
+		choiceTable.setColumns(3);
+		choiceTable.setCellpadding(2);
+		choiceTable.setCellspacing(0);
+		choiceTable.setWidth(1, "50%");
+		choiceTable.setWidth(2, 12);
+		choiceTable.setWidth(3, "50%");
+		choiceTable.setWidth(Table.HUNDRED_PERCENT);
+		table.add(choiceTable, 1, row++);
+		int iRow = 1;
+		choiceTable.add(getHeader(localize("run_reg.event", "Event")), 1, iRow);
+		choiceTable.add(redStar, 1, iRow++);
+		choiceTable.mergeCells(1, iRow, choiceTable.getColumns(), iRow);
+		choiceTable.add(eventSelect, 1, iRow);
+		choiceTable.setHeight(iRow++, 12);
+		choiceTable.add(getHeader(localize(RR_NAME, "Name")), 1, iRow);
+		choiceTable.add(redStar, 1, iRow);
+		choiceTable.add(getHeader(localize(RR_SSN, "SSN")), 3, iRow);
+		choiceTable.add(redStar, 3, iRow++);
+		choiceTable.add(nameField, 1, iRow);
+		choiceTable.add(ssnISField, 3, iRow);
+		choiceTable.setHeight(iRow++, 3);
+		choiceTable.add(getHeader(localize(RR_ADDRESS, "Address")), 1, iRow);
+		choiceTable.add(redStar, 1, iRow);
+		choiceTable.add(getHeader(localize(RR_GENDER, "Gender")), 3, iRow);
+		choiceTable.add(redStar, 3, iRow++);
+		choiceTable.add(addressField, 1, iRow);
+		choiceTable.add(genderField, 3, iRow++);
+		choiceTable.setHeight(iRow++, 3);
+		choiceTable.add(getHeader(localize(RR_CITY, "City")), 1, iRow);
+		choiceTable.add(redStar, 1, iRow);
+		choiceTable.add(getHeader(localize(RR_EMAIL, "Email")), 3, iRow++);
+		choiceTable.add(cityField, 1, iRow);
+		choiceTable.add(emailField, 3, iRow++);
+		choiceTable.setHeight(iRow++, 3);
 		choiceTable.add(getHeader(localize(RR_POSTAL, "Postal Code")), 1, iRow);
 		choiceTable.add(redStar, 1, iRow);
-		choiceTable.add(getHeader(localize(RR_MOBILE, "Mobile Phone")), 3, iRow++);
+		choiceTable.add(getHeader(localize(RR_TEL, "Telephone")), 3, iRow++);
 		choiceTable.add(postalField, 1, iRow);
-		choiceTable.add(mobileField, 3, iRow++);
+		choiceTable.add(telField, 3, iRow++);
 		choiceTable.setHeight(iRow++, 3);
-
 		choiceTable.add(getHeader(localize(RR_COUNTRY, "Country")), 1, iRow);
 		choiceTable.add(redStar, 1, iRow);
+		choiceTable.add(getHeader(localize(RR_MOBILE, "Mobile Phone")), 3, iRow++);
 		choiceTable.add(countryField, 1, iRow);
-
+		choiceTable.add(mobileField, 3, iRow++);
 
 		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("next", "Next")));
 		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_CONCENT));
