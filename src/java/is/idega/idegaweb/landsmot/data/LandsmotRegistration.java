@@ -56,4 +56,14 @@ public interface LandsmotRegistration extends IDOEntity {
 	 * @see is.idega.idegaweb.landsmot.data.LandsmotRegistrationBMPBean#getEvent
 	 */
 	public LandsmotEvent getEvent();
+
+	/**
+	 * @see is.idega.idegaweb.landsmot.data.LandsmotRegistrationBMPBean#setGroupRegistration
+	 */
+	public void setGroupRegistration(LandsmotGroupRegistration group);
+
+	/**
+	 * @see is.idega.idegaweb.landsmot.data.LandsmotRegistrationBMPBean#getGroupRegistration
+	 */
+	public LandsmotGroupRegistration getGroupRegistration();
 }

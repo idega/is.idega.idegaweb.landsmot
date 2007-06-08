@@ -19,6 +19,7 @@ public class LandsmotRegistrationBMPBean extends GenericEntity implements Landsm
 	private static final String TABLE_NAME = "LA_EVENT_REGISTRATION";
 	private static final String COLUMN_USER = "IC_USER_ID";
 	private static final String COLUMN_EVENT = "LA_EVENT_ID";
+	private static final String COLUMN_GROUP_REGISTRATION = "LA_GROUP_REGISTRATION_ID";
 	private static final String COLUMN_DATE = "REGISTRATION_DATE";
 	private static final String COLUMN_CREDITCARD_INFO = "CC_INFO_ID";
 	private static final String COLUMN_CREDITCARD_AUTHORIZATION = "CC_AUTH_CODE";
@@ -34,7 +35,7 @@ public class LandsmotRegistrationBMPBean extends GenericEntity implements Landsm
 		addManyToOneRelationship(COLUMN_CREDITCARD_INFO, CreditCardInformation.class);
 		addAttribute(COLUMN_CREDITCARD_AUTHORIZATION, "cc_auth", String.class, 10);
 		addManyToOneRelationship(COLUMN_EVENT, LandsmotEvent.class);
-		addManyToManyRelationShip(LandsmotGroupRegistration.class);
+		addManyToOneRelationship(COLUMN_GROUP_REGISTRATION, LandsmotGroupRegistration.class);
 	}
 
 	public void setUser(User user) {
@@ -77,6 +78,14 @@ public class LandsmotRegistrationBMPBean extends GenericEntity implements Landsm
 		return (LandsmotEvent) getColumnValue(COLUMN_EVENT);
 	}
 	
+	public void setGroupRegistration(LandsmotGroupRegistration group) {
+		setColumn(COLUMN_GROUP_REGISTRATION, group);
+	}
+	
+	public LandsmotGroupRegistration getGroupRegistration() {
+		return (LandsmotGroupRegistration) getColumnValue(COLUMN_GROUP_REGISTRATION);
+	}
+	
 	public Object ejbFindByUserAndEvent(User user, LandsmotEvent event) throws FinderException {
 		Table table = new Table(this);
 	
@@ -100,12 +109,10 @@ public class LandsmotRegistrationBMPBean extends GenericEntity implements Landsm
 	
 	public Collection ejbFindByGroupRegistration(LandsmotGroupRegistration groupRegistration) throws IDORelationshipException, FinderException {
 		Table table = new Table(this);
-		Table grvTable = new Table(groupRegistration);
 		
 		SelectQuery query = new SelectQuery(table);
 		query.addColumn(new Column(table, getIDColumnName()));
-		query.addJoin(table, grvTable);
-		query.addCriteria(new MatchCriteria(new Column(grvTable, "LA_GROUP_REGISTRATION_ID"), MatchCriteria.EQUALS, groupRegistration));
+		query.addCriteria(new MatchCriteria(new Column(table, COLUMN_GROUP_REGISTRATION), MatchCriteria.EQUALS, groupRegistration));
 		
 		return idoFindPKsByQuery(query);
 	}

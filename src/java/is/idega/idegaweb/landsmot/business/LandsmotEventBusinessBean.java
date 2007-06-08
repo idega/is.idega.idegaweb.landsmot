@@ -2,10 +2,13 @@ package is.idega.idegaweb.landsmot.business;
 
 import is.idega.idegaweb.landsmot.data.LandsmotEvent;
 import is.idega.idegaweb.landsmot.data.LandsmotEventHome;
+import is.idega.idegaweb.landsmot.data.LandsmotGroupRegistration;
+import is.idega.idegaweb.landsmot.data.LandsmotGroupRegistrationHome;
 import is.idega.idegaweb.landsmot.data.LandsmotRegistration;
 import is.idega.idegaweb.landsmot.data.LandsmotRegistrationHome;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Locale;
 
 import javax.ejb.CreateException;
@@ -32,19 +35,51 @@ public class LandsmotEventBusinessBean extends IBOServiceBean implements Landsmo
 			return null;
 		}
 	}
+
+	public LandsmotGroupRegistration register(String groupName, Collection participants, LandsmotEvent event, String email,IWTimestamp date) {
+		LandsmotGroupRegistration groupRegistration = null;
+		try {
+			groupRegistration = getLandsmotGroupRegistrationHome().create();
+			groupRegistration.setName(groupName);
+			groupRegistration.setEvent(event);
+			groupRegistration.setDate(date.getTimestamp());
+			groupRegistration.store();
+			
+			if (participants != null && !participants.isEmpty()) {
+				Iterator iter = participants.iterator();
+				while (iter.hasNext()) {
+					User participant = (User) iter.next();
+					LandsmotRegistration registration = register(participant, null, null, date);
+					if (registration != null) {
+						registration.setGroupRegistration(groupRegistration);
+						registration.store();
+					}
+				}
+			}
+			
+		} catch (CreateException e) {
+			e.printStackTrace();
+		}
+		return groupRegistration;
+	}
+	
 	
 	public LandsmotRegistration register(User user, LandsmotEvent event, String email,IWTimestamp date) {
 		LandsmotRegistration reg = null;
-		try {
-			reg = getLandsmotRegistrationHome().findByUserAndEvent(user, event);
-		} catch (FinderException e) {
+		if (event != null) {
+			try {
+				reg = getLandsmotRegistrationHome().findByUserAndEvent(user, event);
+			} catch (FinderException e) {
+			}
 		}
 		
 		if (reg == null) {
 			try {
 				reg = getLandsmotRegistrationHome().create();
 				reg.setUser(user);
-				reg.setEvent(event);
+				if (event != null) {
+					reg.setEvent(event);
+				}
 				reg.setDate(date.getTimestamp());
 				reg.store();
 			} catch (CreateException e) {
@@ -98,6 +133,14 @@ public class LandsmotEventBusinessBean extends IBOServiceBean implements Landsmo
 	
 	public String getBundleIdentifier() {
 		return is.idega.idegaweb.landsmot.presentation.LandsmotRegistration.IW_BUNDLE_IDENTIFIER;
+	}
+	
+	private LandsmotGroupRegistrationHome getLandsmotGroupRegistrationHome() {
+		try {
+			return (LandsmotGroupRegistrationHome) IDOLookup.getHome(LandsmotGroupRegistration.class);
+		} catch (IDOLookupException e) {
+			throw new IDORuntimeException(e);
+		}
 	}
 	
 	private LandsmotRegistrationHome getLandsmotRegistrationHome() {

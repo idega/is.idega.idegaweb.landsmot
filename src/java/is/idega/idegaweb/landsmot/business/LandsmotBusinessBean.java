@@ -1,6 +1,7 @@
 package is.idega.idegaweb.landsmot.business;
 
 import is.idega.idegaweb.landsmot.data.LandsmotEvent;
+import is.idega.idegaweb.landsmot.data.LandsmotGroupRegistration;
 import is.idega.idegaweb.landsmot.data.LandsmotRegistration;
 
 import java.rmi.RemoteException;
@@ -139,15 +140,23 @@ public class LandsmotBusinessBean extends IBOServiceBean implements LandsmotBusi
 		if (runners != null) {
 			Iterator iter = runners.iterator();
 			while (iter.hasNext()) {
-				EventParticipant runner = (EventParticipant) iter.next();
-				Collection evs = runner.getEvents();
+				EventParticipant participant = (EventParticipant) iter.next();
+				Collection evs = participant.getEvents();
 				if (evs != null && !evs.isEmpty()) {
 					Iterator eter = evs.iterator();
 					while (eter.hasNext()) {
 						LandsmotEvent event = (LandsmotEvent) eter.next();
-						LandsmotRegistration reg = getEventBusiness().register(runner.getUser(), event, email, date);
-						if (reg != null) {
-							participants.add(reg);
+						if (participant.isGroup()) {
+							Collection parts = participant.getParticipants();
+							LandsmotGroupRegistration reg = getEventBusiness().register(participant.getName(), parts, event, email, date);
+							if (reg != null) {
+								participants.add(reg);
+							}
+						} else {
+							LandsmotRegistration reg = getEventBusiness().register(participant.getUser(), event, email, date);
+							if (reg != null) {
+								participants.add(reg);
+							}
 						}
 					}
 				}

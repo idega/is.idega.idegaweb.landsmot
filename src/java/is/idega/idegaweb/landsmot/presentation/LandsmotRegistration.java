@@ -1,8 +1,8 @@
 package is.idega.idegaweb.landsmot.presentation;
 
+import is.idega.idegaweb.landsmot.business.EventParticipant;
 import is.idega.idegaweb.landsmot.business.LandsmotBusiness;
 import is.idega.idegaweb.landsmot.business.LandsmotEventBusiness;
-import is.idega.idegaweb.landsmot.business.EventParticipant;
 import is.idega.idegaweb.landsmot.data.LandsmotEvent;
 
 import java.rmi.RemoteException;
@@ -36,7 +36,6 @@ import com.idega.presentation.Table;
 import com.idega.presentation.text.Link;
 import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.CheckBox;
-import com.idega.presentation.ui.DateInput;
 import com.idega.presentation.ui.DropdownMenu;
 import com.idega.presentation.ui.Form;
 import com.idega.presentation.ui.GenericButton;
@@ -751,10 +750,17 @@ public class LandsmotRegistration extends Block {
 		Iterator iter = runners.iterator();
 		while (iter.hasNext()) {
 			Object obj = iter.next();
-			is.idega.idegaweb.landsmot.data.LandsmotRegistration reg = (is.idega.idegaweb.landsmot.data.LandsmotRegistration) obj;
-
-			runnerTable.add(getText(reg.getUser().getName()), 1, runRow);
-			runnerTable.add(getText(reg.getEvent().getName()), 2, runRow++);
+			if (obj instanceof is.idega.idegaweb.landsmot.data.LandsmotRegistration) {
+				is.idega.idegaweb.landsmot.data.LandsmotRegistration reg = (is.idega.idegaweb.landsmot.data.LandsmotRegistration) obj;
+	
+				runnerTable.add(getText(reg.getUser().getName()), 1, runRow);
+				runnerTable.add(getText(reg.getEvent().getName()), 2, runRow++);
+			} else if (obj instanceof is.idega.idegaweb.landsmot.data.LandsmotGroupRegistration) {
+				is.idega.idegaweb.landsmot.data.LandsmotGroupRegistration reg = (is.idega.idegaweb.landsmot.data.LandsmotGroupRegistration) obj;
+				
+				runnerTable.add(getText(reg.getName()), 1, runRow);
+				runnerTable.add(getText(reg.getEvent().getName()), 2, runRow++);
+			}
 		}
 		
 		if (doPayment) {
@@ -869,7 +875,7 @@ public class LandsmotRegistration extends Block {
 			this.runner = collectValues(iwc);
 		}
 		catch (FinderException fe) {
-			getParentPage().setAlertOnLoad(localize("run_reg.user_not_found_for_personal_id", "No user found with personal ID."));
+//			getParentPage().setAlertOnLoad(localize("run_reg.user_not_found_for_personal_id", "No user found with personal ID."));
 			action = ACTION_STEP_PERSON_LOOKUP;
 		}
 		return action;

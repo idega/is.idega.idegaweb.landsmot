@@ -91,7 +91,7 @@ public class LandsmotGroupRegistration extends LandsmotRegistration {
 				inp.setStyleClass("required");
 				inp.setAsNotEmpty(localize(localization_prefix+".you_must_name_your_team", "You must name your team"));
 			}
-			label = new Label(localize(localization_prefix+".team_name", "Team name"), inp);
+			label = new Label("* "+localize(localization_prefix+".team_name", "Team name"), inp);
 			table.add(label, 1, row);
 			table.add(inp, 1, row);
 			++row;
