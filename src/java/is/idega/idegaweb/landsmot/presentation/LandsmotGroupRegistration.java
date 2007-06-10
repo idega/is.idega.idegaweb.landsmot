@@ -29,6 +29,28 @@ public class LandsmotGroupRegistration extends LandsmotRegistration {
 		super.getParentPage().addStyleSheetURL(iwb.getResourcesVirtualPath()+"/style/registration.css");
 	}
 	
+	protected int getStepNumber(int step) {
+		switch (step) {
+		case ACTION_STEP_PERSON_LOOKUP :
+			return 1;
+		case ACTION_STEP_CONCENT :
+			return 2;
+		case ACTION_STEP_PAYMENT :
+			return 3;
+		case ACTION_SAVE :
+			return 4;
+		case ACTION_CANCEL :
+			return 1;
+		}
+
+		return super.getStepNumber(step);
+	}
+	
+	protected int getStepCount() {
+		return 4;
+	}
+
+	
 	protected void stepPersonLookup(IWContext iwc) throws RemoteException {
 		Form form = new Form();
 		form.addParameter(PARAMETER_ACTION, ACTION_STEP_CONCENT);
@@ -55,7 +77,7 @@ public class LandsmotGroupRegistration extends LandsmotRegistration {
 		getParentPage().addJavascriptURL(iwb.getResourcesVirtualPath()+"/js/registration.js");
 
 		
-		table.add(getPhasesTable(1, 5, localization_prefix+".registration", "Registration"), 1, row++);
+		table.add(getPhasesTable(getStepNumber(ACTION_STEP_PERSON_LOOKUP), getStepCount(), localization_prefix+".registration", "Registration"), 1, row++);
 		table.setHeight(row++, 12);
 
 		table.add(getInformationTable(localize(localization_prefix+".information_text_step_1", "Information text 1...")), 1, row++);

@@ -106,9 +106,9 @@ public class LandsmotRegistration extends Block {
 	protected static final int ACTION_STEP_PERSON_LOOKUP = 1;
 	protected static final int ACTION_STEP_REGISTER_FOR_EVENT = 2;
 	protected static final int ACTION_STEP_CONCENT = 3;
-	private static final int ACTION_STEP_PAYMENT = 4;
-	private static final int ACTION_SAVE = 5;
-	private static final int ACTION_CANCEL = 6;
+	protected static final int ACTION_STEP_PAYMENT = 4;
+	protected static final int ACTION_SAVE = 5;
+	protected static final int ACTION_CANCEL = 6;
 	
 	private EventParticipant runner;
 	protected IWResourceBundle iwrb = null;
@@ -117,6 +117,30 @@ public class LandsmotRegistration extends Block {
 	
 	public String getBundleIdentifier() {
 		return IW_BUNDLE_IDENTIFIER;
+	}
+	
+	
+	protected int getStepNumber(int step) {
+		switch (step) {
+		case ACTION_STEP_PERSON_LOOKUP :
+			return 1;
+		case ACTION_STEP_CONCENT :
+			return 3;
+		case ACTION_STEP_REGISTER_FOR_EVENT :
+			return 2;
+		case ACTION_STEP_PAYMENT :
+			return 4;
+		case ACTION_SAVE :
+			return 5;
+		case ACTION_CANCEL :
+			return 1;
+		}
+
+		return 0;
+	}
+	
+	protected int getStepCount() {
+		return 5;
 	}
 
 	public void main(IWContext iwc) throws Exception {
@@ -145,7 +169,7 @@ public class LandsmotRegistration extends Block {
 				break;
 		}
 	}
-	
+
 	protected void stepPersonLookup(IWContext iwc) throws RemoteException {
 		Form form = new Form();
 		form.maintainParameter(PARAMETER_PERSONAL_ID);
@@ -158,7 +182,7 @@ public class LandsmotRegistration extends Block {
 		form.add(table);
 		int row = 1;
 
-		table.add(getPhasesTable(1, 5, "run_reg.registration", "Registration"), 1, row++);
+		table.add(getPhasesTable(getStepNumber(ACTION_STEP_PERSON_LOOKUP), getStepCount(), "run_reg.registration", "Registration"), 1, row++);
 		table.setHeight(row++, 12);
 
 		table.add(getInformationTable(localize("run_reg.information_text_step_1", "Information text 1...")), 1, row++);
@@ -183,6 +207,8 @@ public class LandsmotRegistration extends Block {
 		add(form);
 	}
 
+
+	
 	private void stepRegisterForEvent(IWContext iwc) throws RemoteException {
 		Form form = new Form();
 		form.maintainParameter(PARAMETER_PERSONAL_ID);
@@ -196,7 +222,7 @@ public class LandsmotRegistration extends Block {
 		form.add(table);
 		int row = 1;
 
-		table.add(getPhasesTable(2, 5, "run_reg.registration", "Registration"), 1, row++);
+		table.add(getPhasesTable(getStepNumber(ACTION_STEP_REGISTER_FOR_EVENT), getStepCount(), "run_reg.registration", "Registration"), 1, row++);
 		table.setHeight(row++, 12);
 
 		table.add(getInformationTable(localize("run_reg.information_text_step_2", "Information text 2...")), 1, row++);
@@ -429,7 +455,7 @@ public class LandsmotRegistration extends Block {
 		form.add(table);
 		int row = 1;
 
-		table.add(getPhasesTable(4, 5, "run_reg.consent", "Consent"), 1, row++);
+		table.add(getPhasesTable(getStepNumber(ACTION_STEP_CONCENT), getStepCount(), "run_reg.consent", "Consent"), 1, row++);
 		table.setHeight(row++, 18);
 
 		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("next", "Next")));
@@ -475,7 +501,7 @@ public class LandsmotRegistration extends Block {
 		DecimalFormatSymbols symbs = new DecimalFormatSymbols(iwc.getLocale());
 		NumberFormat nf = new DecimalFormat("#,###", symbs);
 
-		table.add(getPhasesTable(4, 5, "run_reg.payment_info", "Payment info"), 1, row++);
+		table.add(getPhasesTable(getStepNumber(ACTION_STEP_PAYMENT), getStepCount(), "run_reg.payment_info", "Payment info"), 1, row++);
 		table.setHeight(row++, 12);
 
 		table.add(getInformationTable(localize("run_reg.information_text_step_4", "Information text 4...")), 1, row++);
@@ -691,6 +717,9 @@ public class LandsmotRegistration extends Block {
 				email = iwc.getParameter(PARAMETER_CARD_HOLDER_EMAIL);
 				amount = Double.parseDouble(iwc.getParameter(PARAMETER_AMOUNT));
 				referenceNumber = iwc.getParameter(PARAMETER_REFERENCE_NUMBER);
+				if (referenceNumber == null) {
+					referenceNumber = IWTimestamp.RightNow().toSQLDateString();
+				}
 			}
 			
 			String properties = null;
@@ -698,11 +727,24 @@ public class LandsmotRegistration extends Block {
 				properties = getRunBusiness(iwc).authorizePayment(nameOnCard, cardNumber, expiresMonth, expiresYear, ccVerifyNumber, amount, "ISK", referenceNumber);
 			}
 			Collection participants = getRunBusiness(iwc).saveParticipants(runners, email, hiddenCardNumber, amount, paymentStamp, iwc.getCurrentLocale());
-			System.out.println("[LandsmotRegistration] TODO, CREDITCARD AUTHORIZATION");
 			if (doPayment) {
 				String authID = getRunBusiness(iwc).finishPayment(properties);
 				System.out.println("[LandsmotRegistration] auth ID : "+authID);
 				// Set the authIDs on the participants...
+				Iterator iter = participants.iterator();
+				while (iter.hasNext()) {
+					Object obj = iter.next();
+					if (obj instanceof is.idega.idegaweb.landsmot.data.LandsmotRegistration) {
+						is.idega.idegaweb.landsmot.data.LandsmotRegistration reg = (is.idega.idegaweb.landsmot.data.LandsmotRegistration) obj;
+						reg.setCreditCardAuthorizationCode(authID);
+						reg.store();
+					} else if (obj instanceof is.idega.idegaweb.landsmot.data.LandsmotGroupRegistration) {
+						is.idega.idegaweb.landsmot.data.LandsmotGroupRegistration reg = (is.idega.idegaweb.landsmot.data.LandsmotGroupRegistration) obj;
+						reg.setCreditCardAuthorizationCode(authID);
+						reg.store();
+					}
+				}
+
 			}
 			iwc.removeSessionAttribute(SESSION_ATTRIBUTE_RUNNER_MAP);
 			
@@ -732,7 +774,7 @@ public class LandsmotRegistration extends Block {
 		iwc.setSessionAttribute(SESSION_ATTRIBUTE_CARD_NUMBER, cardNumber);
 		iwc.setSessionAttribute(SESSION_ATTRIBUTE_PAYMENT_DATE, paymentStamp);
 
-		table.add(getPhasesTable(5, 5, "run_reg.receipt", "Receipt"), 1, row++);
+		table.add(getPhasesTable(getStepNumber(ACTION_SAVE), getStepCount(), "run_reg.receipt", "Receipt"), 1, row++);
 		table.setHeight(row++, 18);
 		
 		table.add(getHeader(localize("run_reg.hello_participant", "Hello participant(s)")), 1, row++);
