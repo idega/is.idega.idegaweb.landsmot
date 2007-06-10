@@ -80,9 +80,9 @@
       <type>map</type>
     </key>
     <key>
-      <name>disable_payment_authorization_process</name>
+      <name>merchant_pk</name>
       <type>java.lang.String</type>
-      <value>true</value>
+      <value>1</value>
     </key>
   </map>
 </pxml>
