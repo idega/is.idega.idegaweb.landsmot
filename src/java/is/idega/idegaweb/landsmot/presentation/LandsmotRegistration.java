@@ -498,6 +498,7 @@ public class LandsmotRegistration extends Block {
 		table.setWidth(Table.HUNDRED_PERCENT);
 		form.add(table);
 		int row = 1;
+
 		DecimalFormatSymbols symbs = new DecimalFormatSymbols(iwc.getLocale());
 		NumberFormat nf = new DecimalFormat("#,###", symbs);
 
@@ -536,7 +537,7 @@ public class LandsmotRegistration extends Block {
 				runnerTable.add(getText(event.getName()), 2, runRow);
 				float price = event.getPrice();
 				totalAmount += price;
-				runnerTable.add(getText(nf.format(price)), 3, runRow++);
+				runnerTable.add(getText(nf.format(price)+" ISK"), 3, runRow++);
 			}
 			addRunner(iwc, runner.getPersonalID(), runner);
 		}
@@ -548,7 +549,7 @@ public class LandsmotRegistration extends Block {
 		
 		runnerTable.setHeight(runRow++, 12);
 		runnerTable.add(getHeader(localize("run_reg.total_amount", "Total amount")), 1, runRow);
-		runnerTable.add(getHeader(nf.format(totalAmount)), 3, runRow);
+		runnerTable.add(getHeader(nf.format(totalAmount)+" ISK"), 3, runRow);
 		runnerTable.setColumnAlignment(3, Table.HORIZONTAL_ALIGN_RIGHT);
 
 		Table creditCardTable = new Table();
@@ -582,6 +583,7 @@ public class LandsmotRegistration extends Block {
 		TextInput nameField = (TextInput) getStyledInterface(new TextInput(PARAMETER_NAME_ON_CARD));
 		nameField.setAsNotEmpty(localize("run_reg.must_supply_card_holder_name", "You must supply card holder name"));
 		nameField.keepStatusOnAction(true);
+		nameField.setAutoComplete(false);
 		
 		TextInput ccv = (TextInput) getStyledInterface(new TextInput(PARAMETER_CCV));
 		ccv.setLength(3);
@@ -590,7 +592,8 @@ public class LandsmotRegistration extends Block {
 		ccv.setAsIntegers(localize("run_reg.not_valid_ccv", "Not a valid CCV number"));
 		ccv.setAsNotEmpty(localize("run_reg.must_supply_ccv", "You must enter the CCV number"));
 		ccv.keepStatusOnAction(true);
-		
+		ccv.setAutoComplete(false);
+
 		IWTimestamp stamp = new IWTimestamp();
 		DropdownMenu month = (DropdownMenu) getStyledInterface(new DropdownMenu(PARAMETER_EXPIRES_MONTH));
 		for (int a = 1; a <= 12; a++) {
@@ -620,6 +623,7 @@ public class LandsmotRegistration extends Block {
 			cardNumber.setAsIntegers(localize("run_reg.not_valid_card_number", "Not a valid card number"));
 			cardNumber.setAsNotEmpty(localize("run_reg.must_supply_card_number", "You must enter the credit card number"));
 			cardNumber.keepStatusOnAction(true);
+			cardNumber.setAutoComplete(false);
 
 			creditCardTable.add(cardNumber, 3, creditRow);
 			if (a != 4) {
@@ -805,6 +809,10 @@ public class LandsmotRegistration extends Block {
 			}
 		}
 		
+		DecimalFormatSymbols symbs = new DecimalFormatSymbols(iwc.getLocale());
+		NumberFormat nf = new DecimalFormat("#,###", symbs);
+
+		
 		if (doPayment) {
 			Table creditCardTable = new Table(2, 3);
 			creditCardTable.add(getHeader(localize("run_reg.payment_received_timestamp", "Payment received") + ":"), 1, 1);
@@ -812,7 +820,7 @@ public class LandsmotRegistration extends Block {
 			creditCardTable.add(getHeader(localize("run_reg.card_number", "Card number") + ":"), 1, 2);
 			creditCardTable.add(getText(cardNumber), 2, 2);
 			creditCardTable.add(getHeader(localize("run_reg.amount", "Amount") + ":"), 1, 3);
-			creditCardTable.add(getText(String.valueOf(amount)), 2, 3);
+			creditCardTable.add(getText(nf.format(amount)+ " ISK"), 2, 3);
 			table.setHeight(row++, 16);
 			table.add(creditCardTable, 1, row++);
 		}

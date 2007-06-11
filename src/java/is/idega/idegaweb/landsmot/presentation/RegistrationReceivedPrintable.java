@@ -4,6 +4,8 @@
 package is.idega.idegaweb.landsmot.presentation;
 
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.Iterator;
@@ -16,7 +18,6 @@ import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.PrintButton;
 import com.idega.presentation.ui.Window;
 import com.idega.util.IWTimestamp;
-import com.idega.util.LocaleUtil;
 
 /**
  * @author Sigtryggur
@@ -119,7 +120,9 @@ public class RegistrationReceivedPrintable extends Window {
 	}
 	
 	private String formatAmount(Locale locale, float amount) {
-		return NumberFormat.getInstance(locale).format(amount) + " " + (locale.equals(LocaleUtil.getIcelandicLocale()) ? "ISK" : "EUR");
+		DecimalFormatSymbols symbs = new DecimalFormatSymbols(locale);
+		NumberFormat nf = new DecimalFormat("#,###", symbs);
+		return nf.format(amount) + " ISK";
 	}
 	
 	private Text getHeader(String s) {
