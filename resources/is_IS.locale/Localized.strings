@@ -1,7 +1,12 @@
 gender.female=Kona
 gender.male=Karl
+landsmot_group_reg.information_text_step_1=Skr\u00E1i\u00F0 inn nafn li\u00F0st og kennit\u00F6lur \u00FEeirra \u00FE\u00E1ttakanda sem eru \u00ED li\u00F0inu. \u00DEa\u00F0 ver\u00F0ur a\u00F0 skr\u00E1 alla \u00FE\u00E1tttakendur sem merktir eru me\u00F0 stj\u00F3rnu.
 landsmot_group_reg.no_event_available=Engar \u00ED\u00FEr\u00F3ttagreinar \u00ED bo\u00F0i
+landsmot_group_reg.participant=\u00DE\u00E1tttakandi
+landsmot_group_reg.participants_marked_with_star_must_be_selected=\u00DE\u00E1tttakandi merkur me\u00F0 stj\u00F6rnu * ver\u00F0ur a\u00F0 vera me\u00F0.
 landsmot_group_reg.registration=Skr\u00E1ning
+landsmot_group_reg.team_name=Nafn li\u00F0s
+landsmot_group_reg.you_must_name_your_team=\u00DE\u00FA ver\u00F0ur a\u00F0 velja nafn \u00E1 li\u00F0i\u00F0
 next=\u00C1fram
 of=af
 previous=Til baka
