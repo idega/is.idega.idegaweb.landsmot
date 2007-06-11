@@ -41,9 +41,21 @@ public class LandsmotGroupRegistration extends LandsmotRegistration {
 			return 4;
 		case ACTION_CANCEL :
 			return 1;
+		default : 
+			return super.getStepNumber(step);
+
 		}
 
-		return super.getStepNumber(step);
+	}
+	
+	protected int getPreviousStep(int step) {
+		switch (step) {
+		case ACTION_STEP_CONCENT :
+			return ACTION_STEP_PERSON_LOOKUP;
+		default : 
+			return super.getPreviousStep(step);
+		}
+		
 	}
 	
 	protected int getStepCount() {

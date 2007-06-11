@@ -139,6 +139,25 @@ public class LandsmotRegistration extends Block {
 		return 0;
 	}
 	
+	protected int getPreviousStep(int step) {
+		switch (step) {
+		case ACTION_STEP_PERSON_LOOKUP :
+			return 1;
+		case ACTION_STEP_CONCENT :
+			return 2;
+		case ACTION_STEP_REGISTER_FOR_EVENT :
+			return 1;
+		case ACTION_STEP_PAYMENT :
+			return 3;
+		case ACTION_SAVE :
+			return 4;
+		case ACTION_CANCEL :
+			return 1;
+		}
+
+		return 0;
+	}
+	
 	protected int getStepCount() {
 		return 5;
 	}
@@ -476,7 +495,7 @@ public class LandsmotRegistration extends Block {
 		table.add(getHeader(localize("run_reg.agree_terms", "Yes, I agree")), 1, row++);
 		
 		SubmitButton previous = (SubmitButton) getButton(new SubmitButton(localize("previous", "Previous")));
-		previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_REGISTER_FOR_EVENT));
+		previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(getPreviousStep(ACTION_STEP_CONCENT)));
 
 		table.setHeight(row++, 18);
 		table.add(previous, 1, row);
