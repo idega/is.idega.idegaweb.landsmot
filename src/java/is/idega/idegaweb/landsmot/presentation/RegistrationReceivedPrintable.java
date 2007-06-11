@@ -68,10 +68,22 @@ public class RegistrationReceivedPrintable extends Window {
 		Iterator iter = runners.iterator();
 		while (iter.hasNext()) {
 			Object obj = iter.next();
-			is.idega.idegaweb.landsmot.data.LandsmotRegistration reg = (is.idega.idegaweb.landsmot.data.LandsmotRegistration) obj;
-
-			runnerTable.add(getText(reg.getUser().getName()), 1, runRow);
-			runnerTable.add(getText(reg.getEvent().getName()), 2, runRow++);
+			if (obj instanceof is.idega.idegaweb.landsmot.data.LandsmotRegistration) {
+				is.idega.idegaweb.landsmot.data.LandsmotRegistration reg = (is.idega.idegaweb.landsmot.data.LandsmotRegistration) obj;
+	
+				runnerTable.add(getText(reg.getUser().getName()), 1, runRow);
+				runnerTable.add(getText(reg.getEvent().getName()), 2, runRow++);
+			} else if (obj instanceof is.idega.idegaweb.landsmot.data.LandsmotGroupRegistration) {
+				is.idega.idegaweb.landsmot.data.LandsmotGroupRegistration reg = (is.idega.idegaweb.landsmot.data.LandsmotGroupRegistration) obj;
+				
+				runnerTable.add(getText(reg.getName()), 1, runRow);
+				runnerTable.add(getText(reg.getEvent().getName()), 2, runRow++);
+			}
+//			Object obj = iter.next();
+//			is.idega.idegaweb.landsmot.data.LandsmotRegistration reg = (is.idega.idegaweb.landsmot.data.LandsmotRegistration) obj;
+//
+//			runnerTable.add(getText(reg.getUser().getName()), 1, runRow);
+//			runnerTable.add(getText(reg.getEvent().getName()), 2, runRow++);
 		}
 		
 		Table creditCardTable = new Table(2, 3);
