@@ -1,0 +1,40 @@
+body {
+	font: 11px sans-serif;
+	color: #454545;
+	background-color: #fff;
+	margin: 0;
+	padding: 0;
+	background: #f5f5f5;
+}
+
+a {
+	color: #00458a;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #000;
+}
+
+#header {
+	display: block;
+	height: 117px;
+	background-color: #f5f5f5;
+	padding: 0 0 0 0;
+}
+
+* html #header {
+	border-bottom: 1px solid #e0e0e0;
+}
+
+#content {
+	position: relative;
+	background: #fff;
+	padding: 8px 8px 8px 8px;
+	width: 744px;
+	overflow: hidden;
+	z-index: 2;
+	border-right: 1px solid #e0e0e0;
+	border-bottom: 1px solid #e0e0e0;
+}
+
