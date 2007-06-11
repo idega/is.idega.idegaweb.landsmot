@@ -533,15 +533,23 @@ public class LandsmotRegistration extends Block {
 		runnerTable.setCellspacing(0);
 		runnerTable.add(getHeader(localize("run_reg.name", "Name")), 1, 1);
 		runnerTable.add(getHeader(localize("run_reg.event", "Event")), 2, 1);
-		runnerTable.add(getHeader(localize("run_reg.price", "Price")), 3, 1);
+		runnerTable.add(getHeader(localize("run_reg.count", "Count")), 3, 1);
+		runnerTable.add(getHeader(localize("run_reg.unit_price", "Unit price")), 4, 1);
+		runnerTable.add(getHeader(localize("run_reg.price", "Price")), 5, 1);
 		table.add(runnerTable, 1, row++);
 		table.setHeight(row++, 18);
 		int runRow = 2;
 		
 		float totalAmount = 0;
+		int multiplier = 1;
 		Iterator iter = runners.values().iterator();
 		while (iter.hasNext()) {
 			EventParticipant runner = (EventParticipant) iter.next();
+			Collection participants = runner.getParticipants();
+			if (participants != null && !participants.isEmpty()) {
+				multiplier = participants.size();
+			}
+
 			if (runner.getUser() != null) {
 				runnerTable.add(getText(runner.getUser().getName()), 1, runRow);
 			}
@@ -554,9 +562,20 @@ public class LandsmotRegistration extends Block {
 			while (eter.hasNext()) {
 				LandsmotEvent event = (LandsmotEvent) eter.next();
 				runnerTable.add(getText(event.getName()), 2, runRow);
-				float price = event.getPrice();
+				float preprice = event.getPrice();
+				float price = preprice * multiplier;
 				totalAmount += price;
-				runnerTable.add(getText(nf.format(price)+" ISK"), 3, runRow++);
+				runnerTable.add(getText(Integer.toString(multiplier)), 3, runRow);
+				runnerTable.add(getText(nf.format(preprice)+" ISK"), 4, runRow);
+				runnerTable.add(getText(nf.format(price)+" ISK"), 5, runRow);
+//				if (multiplier > 1) {
+//					runnerTable.add(getText(" ("+multiplier+"*"+nf.format(preprice)+" ISK")+")", 3, runRow);
+////					if (!headerAdded) {
+////						runnerTable.add(getText(" (per person)"), 3, 1);
+////						headerAdded = true;
+////					}
+//				}
+				runRow++;
 			}
 			addRunner(iwc, runner.getPersonalID(), runner);
 		}
@@ -568,8 +587,9 @@ public class LandsmotRegistration extends Block {
 		
 		runnerTable.setHeight(runRow++, 12);
 		runnerTable.add(getHeader(localize("run_reg.total_amount", "Total amount")), 1, runRow);
-		runnerTable.add(getHeader(nf.format(totalAmount)+" ISK"), 3, runRow);
-		runnerTable.setColumnAlignment(3, Table.HORIZONTAL_ALIGN_RIGHT);
+		runnerTable.add(getHeader(nf.format(totalAmount)+" ISK"), 5, runRow);
+		runnerTable.setColumnAlignment(4, Table.HORIZONTAL_ALIGN_RIGHT);
+		runnerTable.setColumnAlignment(5, Table.HORIZONTAL_ALIGN_RIGHT);
 
 		Table creditCardTable = new Table();
 		creditCardTable.setWidth(Table.HUNDRED_PERCENT);
