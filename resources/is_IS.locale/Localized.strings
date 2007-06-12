@@ -68,4 +68,5 @@ run_reg.total_amount=Heildarupph\u00E6\u00F0
 run_reg.unit_price=Einingaver\u00F0
 run_reg.user_not_found_for_personal_id=Engin einstaklingur fannst me\u00F0 kennit\u00F6lu.
 run_reg.you_must_select_at_least_one_event=\u00DE\u00FA ver\u00F0ur a\u00F0 velja a\u00F0 minnsta kosti eina \u00ED\u00FEr\u00F3ttagrein
+select_one=Velji\u00F0 kortategund
 step=Skref

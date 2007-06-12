@@ -4,10 +4,12 @@ package is.idega.idegaweb.landsmot.business;
 import java.util.Locale;
 import java.util.Collection;
 import com.idega.block.creditcard.business.CreditCardAuthorizationException;
+import com.idega.presentation.ui.DropdownMenu;
 import com.idega.util.IWTimestamp;
 import com.idega.business.IBOService;
 import java.rmi.RemoteException;
 import com.idega.data.IDOCreateException;
+import com.idega.idegaweb.IWResourceBundle;
 
 public interface LandsmotBusiness extends IBOService {
 	/**
@@ -45,4 +47,6 @@ public interface LandsmotBusiness extends IBOService {
 	 * @see is.idega.idegaweb.landsmot.business.LandsmotBusinessBean#getCountries
 	 */
 	public Collection getCountries() throws RemoteException;
+	
+	public DropdownMenu getAvailableCardTypes(IWResourceBundle iwrb);
 }

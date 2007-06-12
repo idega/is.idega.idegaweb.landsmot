@@ -19,6 +19,8 @@ import com.idega.block.creditcard.business.CreditCardClient;
 import com.idega.block.creditcard.data.CreditCardMerchant;
 import com.idega.block.creditcard.data.KortathjonustanMerchant;
 import com.idega.block.creditcard.data.KortathjonustanMerchantHome;
+import com.idega.block.trade.data.CreditCardInformation;
+import com.idega.block.trade.data.CreditCardInformationHome;
 import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
 import com.idega.business.IBORuntimeException;
@@ -29,6 +31,8 @@ import com.idega.data.IDOCreateException;
 import com.idega.data.IDOLookup;
 import com.idega.data.IDOLookupException;
 import com.idega.idegaweb.IWBundle;
+import com.idega.idegaweb.IWResourceBundle;
+import com.idega.presentation.ui.DropdownMenu;
 import com.idega.user.business.GroupBusiness;
 import com.idega.user.business.UserBusiness;
 import com.idega.user.data.Group;
@@ -48,6 +52,7 @@ public class LandsmotBusinessBean extends IBOServiceBean implements LandsmotBusi
 	private static String PROP_MESSAGEBOX_FROM_ADDRESS = "messagebox_from_mailaddress";
 	private static String DEFAULT_MESSAGEBOX_FROM_ADDRESS = "messagebox@idega.com";
 	private static String DEFAULT_CC_ADDRESS = "";
+	public static final String PROPERTY_INFO_PK = "cc_info_pk";
 	public static final String PROPERTY_MERCHANT_PK = "merchant_pk";
 	public static final String PROPERTY_SEND_EMAILS = "send_emails";
 
@@ -211,16 +216,28 @@ public class LandsmotBusinessBean extends IBOServiceBean implements LandsmotBusi
 	}
 	
 	private CreditCardMerchant getCreditCardMerchant() throws FinderException {
-		String merchantPK = getIWApplicationContext().getIWMainApplication().getBundle(IW_BUNDLE_IDENTIFIER).getProperty(PROPERTY_MERCHANT_PK);
-		if (merchantPK != null) {
+		String infoPK = getIWApplicationContext().getIWMainApplication().getBundle(IW_BUNDLE_IDENTIFIER).getProperty(PROPERTY_INFO_PK);
+		if (infoPK != null) {
 			try {
-				return ((KortathjonustanMerchantHome) IDOLookup.getHome(KortathjonustanMerchant.class)).findByPrimaryKey(new Integer(merchantPK));
+				CreditCardInformationHome ccInfoHome = (CreditCardInformationHome) IDOLookup.getHome(CreditCardInformation.class);
+				CreditCardInformation ccInfo = ccInfoHome.findByPrimaryKey(new Integer(infoPK));
+				CreditCardMerchant merchant = getCreditCardBusiness().getCreditCardMerchant(ccInfo);
+				return merchant;
+			} catch (IDOLookupException e) {
+				throw new IBORuntimeException(e);
 			}
-			catch (IDOLookupException ile) {
-				throw new IBORuntimeException(ile);
+		} else {
+			String merchantPK = getIWApplicationContext().getIWMainApplication().getBundle(IW_BUNDLE_IDENTIFIER).getProperty(PROPERTY_MERCHANT_PK);
+			if (merchantPK != null) {
+				try {
+					return ((KortathjonustanMerchantHome) IDOLookup.getHome(KortathjonustanMerchant.class)).findByPrimaryKey(new Integer(merchantPK));
+				}
+				catch (IDOLookupException ile) {
+					throw new IBORuntimeException(ile);
+				}
 			}
+			return null;
 		}
-		return null;
 	}
 	
 	public void savePayment(int userID, int distanceID, String payMethod, String amount) {
@@ -369,6 +386,27 @@ public class LandsmotBusinessBean extends IBOServiceBean implements LandsmotBusi
 			//log(re);
 		}
 		return country;
+	}
+	
+	public String getBundleIdentifier() {
+		return is.idega.idegaweb.landsmot.presentation.LandsmotRegistration.IW_BUNDLE_IDENTIFIER;
+	}
+	
+	
+	public DropdownMenu getAvailableCardTypes(IWResourceBundle iwrb) {
+		try {
+			CreditCardMerchant merchant = getCreditCardMerchant();
+			if (merchant != null) {
+				return getCreditCardBusiness().getCreditCardTypes(getCreditCardBusiness().getCreditCardClient(merchant), iwrb, "CARD_TYPE");
+			}
+		}
+		catch (FinderException fe) {
+			fe.printStackTrace();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new DropdownMenu();
 	}
 
 	public LandsmotEventBusiness getEventBusiness() {

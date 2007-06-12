@@ -1,3 +1,6 @@
+card_type.JCB=JCB
+card_type.MASTERCARD=MASTERCARD
+card_type.VISA=VISA
 gender.female=female
 gender.male=male
 iw.component.is.idega.idegaweb.landsmot.presentation.LandsmotGroupRegistration.name=LandsmotGroupRegistration
@@ -90,5 +93,6 @@ run_reg.total_amount=Total amount
 run_reg.unit_price=Unit price
 run_reg.user_not_found_for_personal_id=No user found with personal ID.
 run_reg.you_must_select_at_least_one_event=You must selecte at least one event
+select_one=Select one\:
 step=Step
 you_must_select_at_lease_one_event=You must selecte at least one event

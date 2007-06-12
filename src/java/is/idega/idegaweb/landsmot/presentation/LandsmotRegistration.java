@@ -605,6 +605,8 @@ public class LandsmotRegistration extends Block {
 		int creditRow = 1;
 		
 		creditCardTable.add(getHeader(localize("run_reg.credit_card_information", "Credit card information")), 1, creditRow);
+		creditCardTable.add(getRunBusiness(iwc).getAvailableCardTypes(iwrb), 3, creditRow);
+		creditCardTable.add(Text.getNonBrakingSpace(), 3, creditRow);
 		Collection images = getRunBusiness(iwc).getCreditCardImages();
 		if (images != null) {
 			Iterator iterator = images.iterator();
@@ -616,7 +618,7 @@ public class LandsmotRegistration extends Block {
 				}
 			}
 		}
-		creditCardTable.setAlignment(3, creditRow++, Table.HORIZONTAL_ALIGN_RIGHT);
+//		creditCardTable.setAlignment(3, creditRow++, Table.HORIZONTAL_ALIGN_RIGHT);
 		creditCardTable.setHeight(creditRow++, 12);
 
 		TextInput nameField = (TextInput) getStyledInterface(new TextInput(PARAMETER_NAME_ON_CARD));
@@ -681,8 +683,9 @@ public class LandsmotRegistration extends Block {
 		
 		TextInput emailField = (TextInput) getStyledInterface(new TextInput(PARAMETER_CARD_HOLDER_EMAIL));
 		emailField.setAsEmail(localize("run_reg.email_err_msg", "Not a valid email address"));
-		emailField.setWidth(Table.HUNDRED_PERCENT);
+//		emailField.setWidth(Table.HUNDRED_PERCENT);
 		emailField.keepStatusOnAction(true);
+		emailField.setStyleClass("emailField");
 		
 		creditCardTable.setHeight(creditRow++, 3);
 		creditCardTable.mergeCells(3, creditRow, 3, creditRow+1);
