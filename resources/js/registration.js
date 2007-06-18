@@ -15,7 +15,7 @@ window.addEvent('domready', function() {
 			}
 		
 			if (element.value.length == 10) {
-				LandsmotEventBusiness.getUserNameDWR(element.fillSpan, element.value);
+				LandsmotEventBusiness.getUserNameDWR(element.value, element.fillSpan);
 			} else {
 				element.spaner.innerHTML = '';
 			}
