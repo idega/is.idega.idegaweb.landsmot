@@ -212,7 +212,7 @@ public class LandsmotRegistration extends Block {
 		table.add(Text.getNonBrakingSpace(), 1, row);
 		
 		TextInput input = (TextInput) getStyledInterface(new TextInput(PARAMETER_PERSONAL_ID));
-		input.setAsIcelandicSSNumber(localize("run_reg.not_valid_personal_id", "The personal ID you've entered is not valid"));
+		input.setAsIcelandicSSNumber(localize("run_reg.not_valid_personal_id", "The personal ID you have entered is not valid"));
 		input.setLength(10);
 		input.setMaxlength(10);
 		input.setInFocusOnPageLoad(true);
