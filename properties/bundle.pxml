@@ -84,6 +84,11 @@
       <type>java.lang.String</type>
       <value>1</value>
     </key>
+    <key>
+      <name>cc_info_pk</name>
+      <type>java.lang.String</type>
+      <value>1</value>
+    </key>
   </map>
 </pxml>
 
