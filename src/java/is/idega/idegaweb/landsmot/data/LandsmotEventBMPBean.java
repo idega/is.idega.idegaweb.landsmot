@@ -8,6 +8,7 @@ import javax.ejb.FinderException;
 import com.idega.data.GenericEntity;
 import com.idega.data.query.Column;
 import com.idega.data.query.MatchCriteria;
+import com.idega.data.query.OR;
 import com.idega.data.query.SelectQuery;
 import com.idega.data.query.Table;
 
@@ -23,6 +24,7 @@ public class LandsmotEventBMPBean extends GenericEntity implements LandsmotEvent
 	private static final String COLUMN_GROUP_SIZE_MAX = "GROUP_SIZE_MAX";
 	private static final String COLUMN_PRICE = "PRICE";
 	private static final String COLUMN_CURRENCY = "CURRENCY";
+	private static final String COLUMN_IS_VALID = "IS_VALID";
 	
 	
 	public String getEntityName() {
@@ -40,6 +42,7 @@ public class LandsmotEventBMPBean extends GenericEntity implements LandsmotEvent
 		addAttribute(COLUMN_GROUP_SIZE_MAX, "GroupSize Max", Integer.class);
 		addAttribute(COLUMN_PRICE, "Price", Float.class);
 		addAttribute(COLUMN_CURRENCY, "Currency", String.class);
+		addAttribute(COLUMN_IS_VALID, "IS valid", Boolean.class);
 	}
 
 	public void setName(String name) {
@@ -121,6 +124,11 @@ public class LandsmotEventBMPBean extends GenericEntity implements LandsmotEvent
 		query.addColumn(new Column(table, getIDColumnName()));
 		query.addCriteria(new MatchCriteria(new Column(table, COLUMN_GROUPS), MatchCriteria.EQUALS, group));
 		
+		MatchCriteria or1 = new MatchCriteria(new Column(table, COLUMN_IS_VALID), MatchCriteria.IS, MatchCriteria.NULL);
+		MatchCriteria or2 = new MatchCriteria(new Column(table, COLUMN_IS_VALID), MatchCriteria.EQUALS, true);
+		
+		OR or = new OR(or1, or2);
+		query.addCriteria(or);
 		return idoFindPKsByQuery(query);
 	}
 }
